@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Sun</title>
+
+<style>
+	html, body {
+		margin: 0px; 
+		padding: 0px; 
+		overflow: hidden; 
+		background: #000000;
+		color: #FFFFFF;
+		font-family: Monaco, Courier New, Courier, Lucida Sans Typewriter, Lucida Typewriter, monospace;
+	}
+
+	div {
+		box-sizing: border-box;
+	}
+
+	.container {
+		padding: 0 2%;
+		float: left;
+	}
+
+	.photo {
+		object-fit: contain;
+		display: none;
+		width: 100%;
+		height: 100%;
+	}
+
+	.smallphoto {
+		position: relative;
+		object-fit: contain;
+		display: none;
+		top: calc(50% - 128px);
+		left: calc(50% - 128px);
+		width: 256px;
+		height: 256px;
+	}
+
+	.copyright {
+		display: none;
+		text-align: center;
+	}
+
+	.noimage {
+		display: none;
+		text-align: center;
+	}
+
+	#instructions {
+		position: absolute;
+		text-align: center;
+		display: none;
+	}
+</style>
+
+</head>
+
+<body>
+
+<div id="images">
+<div id="i1" class="container">
+	<img class="photo" id="p1" src="" />
+
+	<img class="smallphoto" id="s1" src="" />
+
+	<div class="copyright" id="c1">
+		An image of this object cannot be displayed for copyright reasons
+	</div>
+
+	<div class="noimage" id="n1">
+		No photograph has been taken of this object
+	</div>
+</div>
+
+<div id="i2" class="container">
+	<img class="photo" id="p2" src="" />
+
+	<img class="smallphoto" id="s2" src="" />
+
+	<div class="copyright" id="c2">
+		An image of this object cannot be displayed for copyright reasons
+	</div>
+
+	<div class="noimage" id="n2">
+		No photograph has been taken of this object
+	</div>
+</div>
+
+<div id="i3" class="container">
+	<img class="photo" id="p3" src="" />
+
+	<img class="smallphoto" id="s3" src="" />
+
+	<div class="copyright" id="c3">
+		An image of this object cannot be displayed for copyright reasons
+	</div>
+
+	<div class="noimage" id="n3">
+		No photograph has been taken of this object
+	</div>
+</div>
+
+<div id="i4" class="container">
+	<img class="photo" id="p4" src="" />
+
+	<img class="smallphoto" id="s4" src="" />
+
+	<div class="copyright" id="c4">
+		An image of this object cannot be displayed for copyright reasons
+	</div>
+
+	<div class="noimage" id="n4">
+		No photograph has been taken of this object
+	</div>
+</div>
+</div>
+
+
+
+<div id="instructions">Navigate to www.___.___/___/phone.html on your smart phone for visual controls</div>
+
+
+<script src="/socket.io/socket.io.js"></script>
+
+<script type="text/javascript">
+
+var socket = io('/projectors-namespace'); // to listen for image change
+
+var shade = 4;
+var recognition = new webkitSpeechRecognition();
+
+// if there's a new image that can be
+// displayed full screen, load it and
+// hide all the other messages
+socket.on('new image', function(url) {
+		document.getElementById("images").appendChild(document.getElementById("images").firstElementChild);
+		if (shade < 4) {
+			shade++;
+		} else {
+			shade = 1;
+		}
+		document.getElementById("p" + shade).src = url;
+		document.getElementById("p" + shade).style.display = "block";
+		document.getElementById("s" + shade).style.display = "none";
+		document.getElementById("c" + shade).style.display = "none";
+		document.getElementById("n" + shade).style.display = "none";
+});
+
+// if there's a new image that must
+// be displayed small, load it and
+// hide all the other messages
+socket.on('small image', function(url) {
+		document.getElementById("images").appendChild(document.getElementById("images").firstElementChild);
+		if (shade < 4) {
+			shade++;
+		} else {
+			shade = 1;
+		}
+		document.getElementById("s" + shade).src = url;
+		document.getElementById("p" + shade).style.display = "none";
+		document.getElementById("s" + shade).style.display = "block";
+		document.getElementById("c" + shade).style.display = "none";
+		document.getElementById("n" + shade).style.display = "none";
+});
+
+// if there's no image, display
+// the relevant message and hide
+// the others
+socket.on('no image', function() {
+		document.getElementById("images").appendChild(document.getElementById("images").firstElementChild);
+		if (shade < 4) {
+			shade++;
+		} else {
+			shade = 1;
+		}
+		document.getElementById("p" + shade).style.display = "none";
+		document.getElementById("s" + shade).style.display = "none";
+		document.getElementById("c" + shade).style.display = "none";
+		document.getElementById("n" + shade).style.display = "block";
+});
+
+// if no image can be displayed
+// for copyright reasons, display
+// the relevant message and hide
+// the others
+socket.on('copyright', function() {
+		document.getElementById("images").appendChild(document.getElementById("images").firstElementChild);
+		if (shade < 4) {
+			shade++;
+		} else {
+			shade = 1;
+		}
+		document.getElementById("p" + shade).style.display = "none";
+		document.getElementById("s" + shade).style.display = "none";
+		document.getElementById("c" + shade).style.display = "block";
+		document.getElementById("n" + shade).style.display = "none";
+});
+
+setup();
+
+function setup(){
+	resize();
+
+	// set up speech recognition
+	recognition.continuous = true;
+	recognition.lang = "en-US";
+	recognition.onresult = function(event) {
+		var currentSpeech = "";
+
+		for (var i = event.resultIndex; i < event.results.length; i++) {
+			currentSpeech += " " + event.results[i][0].transcript;
+		};
+
+		if ((currentSpeech.indexOf("explain") != -1) ||
+			(currentSpeech.indexOf("explanation") != -1)) {
+			socket.emit('explain request');
+		};
+
+		if ((currentSpeech.indexOf("replay") != -1) ||
+			(currentSpeech.indexOf("repeat") != -1) ||
+			(currentSpeech.indexOf("previous") != -1)) {
+			socket.emit('replay request');
+		};
+
+		i = null;
+		event = null;
+		currentSpeech = null;
+	};
+	recognition.onend = function(event) {
+		recognition.start();
+	};
+	recognition.start();
+}
+
+window.onresize = function(event){
+	resize();
+};
+
+// resize the elements to suit the window size
+function resize() {
+	for (var i = 1; i <= 4; i++) { 
+		document.getElementById("i" + i).style.width = window.innerWidth/4 + "px";
+		document.getElementById("i" + i).style.height = window.innerHeight + "px";
+	}
+	document.getElementById("instructions").style.width = window.innerWidth + "px";
+	document.getElementById("instructions").style.top = window.innerHeight - 20 + "px";
+};
+
+</script>
+
+</body>
+</html>

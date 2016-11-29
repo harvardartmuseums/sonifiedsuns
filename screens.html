@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Sun</title>
+
+<style>
+	html, body {
+		margin: 0px; 
+		padding: 0px; 
+		overflow: hidden; 
+		background: #000000;
+	}
+
+	svg, g, circle {
+		border: 0px solid;
+		display: block;
+	}
+
+	#suns {
+		overflow: hidden;
+		position: fixed;
+	}
+
+	.sun {
+		transition: transform 1s, opacity 2s;
+		opacity: 1;
+		transform: translate(0,0);
+	}
+
+	#label {
+		position: absolute;
+		z-index: 3;
+		background-color: #000000;
+		color: #FFFFFF;
+		padding: 2%;
+		box-sizing: border-box;
+		font-family: Monaco, Courier New, Courier, Lucida Sans Typewriter, Lucida Typewriter, monospace;
+		overflow: hidden;
+	}
+
+	#container {
+		position: relative;
+		width: 100%;
+		height: 100%;
+	}
+
+	#title {
+		overflow: hidden;
+	}
+
+	#artist {
+		position: absolute;
+		bottom: 0px;
+		left: 0px;
+	}
+	
+	#date {
+		position: absolute;
+		bottom: 0px;
+		right: 0px;
+	}
+
+</style>
+
+</head>
+
+<body>
+
+
+<!-- Based on Suns Explorer, by Jeff Steward -->
+<!-- https://github.com/harvardartmuseums/suns-explorer -->
+
+
+<div id="suns"><svg id="canvas"></svg></div>
+
+<div id="label">
+	<div id="container">
+		<div id="title"></div>
+		<div id="artist"></div>
+		<div id="date"></div>
+	</div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/config.js"></script>
+<script src="/screens.js"></script>
+
+</body>
+</html>
