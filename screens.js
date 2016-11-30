@@ -813,6 +813,10 @@ function setLabel(item) {
 			text = text.replace("-", " to ");
 		}
 
+		if (/No\.[0-9]/.test(text)) {
+			text = text.replace("No.", "number");
+		}
+
 		speechT.text = text;
 		synthesis.speak(speechT);
 	}
