@@ -163,7 +163,7 @@ s8.onend = function (event) {
 s8.lang = 'en-US';
 
 var s9 = new SpeechSynthesisUtterance(
-	"For an explanation of the tones, say 'explain'. To hear the previous object again, say 'replay'."
+	"For an explanation of the tones, say explain. To hear the previous object again, say replay."
 );
 s9.onend = function (event) {
 	setTimeout(doWork, 2000);
@@ -806,9 +806,14 @@ function calculateTones(colors, dimensions) {
 function setLabel(item) {
 	// title
 	if (item.title != null) {
-		document.getElementById("title").innerHTML = item.title;
+		var text = item.title;
+		document.getElementById("title").innerHTML = text;
 
-		speechT.text = item.title;
+		if (/[0-9]-[0-9]/.test(text)) {
+			text = text.replace("-", " to ");
+		}
+
+		speechT.text = text;
 		synthesis.speak(speechT);
 	}
 
@@ -834,11 +839,10 @@ function setLabel(item) {
 			}
 		}
 
-		// sets HTML and reads, account for 
-		// interpretation of "Jan" as "January"
+		// sets HTML and reads
 		document.getElementById("artist").innerHTML = text;
-		if (text.includes("Jan ")) {
-			text = text.replace ("Jan", "Yan");
+		if (/[0-9]-[0-9]/.test(text)) {
+			text = text.replace("-", " to ");
 		}
 		if (text.includes("Anonymous") || text.includes("Unidentified")) {
 			voiceEnglish.text = text;
@@ -848,7 +852,10 @@ function setLabel(item) {
 			handleLanguage(item.culture, text);
 		}
 		text = null;
-	} 
+	} else if (item.culture != null) {
+		document.getElementById("artist").innerHTML = item.culture;
+		handleLanguage(item.culture, item.culture);
+	}
 	artists = null;
 
 	// date
