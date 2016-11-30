@@ -163,7 +163,7 @@ s8.onend = function (event) {
 s8.lang = 'en-US';
 
 var s9 = new SpeechSynthesisUtterance(
-	"For an explanation of the tones, say <emphasis>explain</emphasis>. To hear the previous object again, say <emphasis>replay</emphasis>."
+	"For an explanation of the tones, say explain. To hear the previous object again, say replay."
 );
 s9.onend = function (event) {
 	setTimeout(doWork, 2000);
