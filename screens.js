@@ -848,9 +848,7 @@ function setLabel(item) {
 			handleLanguage(item.culture, text);
 		}
 		text = null;
-	} else if (item.culture != null) {
-		handleLanguage(item.culture, item.culture);
-	}
+	} 
 	artists = null;
 
 	// date
