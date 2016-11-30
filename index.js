@@ -1,68 +1,66 @@
-"use strict";
+'use strict';
 
 const app = require('express')();
-const socketIO = require('socket.io');
+const io = require('socket.io');
 const path = require('path');
 
 const PORT = process.env.PORT || 3000;
 
-const server = app();
+const server = app()
+	.use('projectors.html', function(req, res){
+		res.sendFile(path.join(__dirname, 'projectors.html'));
+	})
 
-const io = socketIO(server);
+	.use('screens.html', function(req, res){
+		res.sendFile(path.join(__dirname, 'screens.html'));
+	})
 
-var image = null;
+	.use('screens.js', function(req, res){
+		res.sendFile(path.join(__dirname, 'screens.js'));
+	})
 
-server.use('projectors.html', function(req, res){
-	res.sendFile(path.join(__dirname, 'projectors.html'));
-});
+	.use('convolution/1_criptadisansebastiano.wav', function(req, res){
+		res.sendFile(path.join(__dirname, 'convolution/1_criptadisansebastiano.wav'));
+	})
 
-server.use('screens.html', function(req, res){
-	res.sendFile(path.join(__dirname, 'screens.html'));
-});
+	.use('convolution/2_tyndallbrucemonument.wav', function(req, res){
+		res.sendFile(path.join(__dirname, 'convolution/2_tyndallbrucemonument.wav'));
+	})
 
-server.use('screens.js', function(req, res){
-	res.sendFile(path.join(__dirname, 'screens.js'));
-});
+	.use('convolution/3_falklandpalacebottledungeon.wav', function(req, res){
+		res.sendFile(path.join(__dirname, 'convolution/3_falklandpalacebottledungeon.wav'));
+	})
 
-server.use('convolution/1_criptadisansebastiano.wav', function(req, res){
-	res.sendFile(path.join(__dirname, 'convolution/1_criptadisansebastiano.wav'));
-});
+	.use('convolution/4_centralhalluniversityofyork.wav', function(req, res){
+		res.sendFile(path.join(__dirname, 'convolution/4_centralhalluniversityofyork.wav'));
+	})
 
-server.use('convolution/2_tyndallbrucemonument.wav', function(req, res){
-	res.sendFile(path.join(__dirname, 'convolution/2_tyndallbrucemonument.wav'));
-});
+	.use('convolution/5_castellodegualtieriis.wav', function(req, res){
+		res.sendFile(path.join(__dirname, 'convolution/5_castellodegualtieriis.wav'));
+	})
 
-server.use('convolution/3_falklandpalacebottledungeon.wav', function(req, res){
-	res.sendFile(path.join(__dirname, 'convolution/3_falklandpalacebottledungeon.wav'));
-});
+	.use('convolution/6_stmargaretschurch.wav', function(req, res){
+		res.sendFile(path.join(__dirname, 'convolution/6_stmargaretschurch.wav'));
+	})
 
-server.use('convolution/4_centralhalluniversityofyork.wav', function(req, res){
-	res.sendFile(path.join(__dirname, 'convolution/4_centralhalluniversityofyork.wav'));
-});
+	.use('convolution/7_kinoullaisle.wav', function(req, res){
+		res.sendFile(path.join(__dirname, 'convolution/7_kinoullaisle.wav'));
+	})
 
-server.use('convolution/5_castellodegualtieriis.wav', function(req, res){
-	res.sendFile(path.join(__dirname, 'convolution/5_castellodegualtieriis.wav'));
-});
+	.use('convolution/8_yorkminster.wav', function(req, res){
+		res.sendFile(path.join(__dirname, 'convolution/8_yorkminster.wav'));
+	})
 
-server.use('convolution/6_stmargaretschurch.wav', function(req, res){
-	res.sendFile(path.join(__dirname, 'convolution/6_stmargaretschurch.wav'));
-});
+	.use('convolution/9_arbroathabbeysacristy.wav', function(req, res){
+		res.sendFile(path.join(__dirname, 'convolution/9_arbroathabbeysacristy.wav'));
+	})
 
-server.use('convolution/7_kinoullaisle.wav', function(req, res){
-	res.sendFile(path.join(__dirname, 'convolution/7_kinoullaisle.wav'));
-});
+	.use('js/config.js', function(req, res){
+		res.sendFile(path.join(__dirname, 'js/config.js'));
+	})
 
-server.use('convolution/8_yorkminster.wav', function(req, res){
-	res.sendFile(path.join(__dirname, 'convolution/8_yorkminster.wav'));
-});
+	.listen(PORT, () => console.log('Listening on ${ PORT }'));
 
-server.use('convolution/9_arbroathabbeysacristy.wav', function(req, res){
-	res.sendFile(path.join(__dirname, 'convolution/9_arbroathabbeysacristy.wav'));
-});
-
-server.use('js/config.js', function(req, res){
-	res.sendFile(path.join(__dirname, 'js/config.js'));
-});
 
 var screensIO = io.of('/screens-namespace');
 var projectorIO = io.of('/projectors-namespace');
@@ -70,19 +68,15 @@ var projectorIO = io.of('/projectors-namespace');
 screensIO.on('connection', function(socket) {
 	socket.on('new image', function(url) {
 		projectorIO.emit('new image', url);
-		image = url;
 	});
 	socket.on('small image', function(url) {
 		projectorIO.emit('small image', url);
-		image = null;
 	});
 	socket.on('copyright', function() {
 		projectorIO.emit('copyright');
-		image = null;
 	});
 	socket.on('no image', function() {
 		projectorIO.emit('no image');
-		image = null;
 	});
 });
 
@@ -95,5 +89,3 @@ projectorIO.on('connection', function(socket) {
 		screensIO.emit('replay request');
 	});
 });
-
-server.listen(PORT, () => console.log('Listening on ${ PORT }'));
