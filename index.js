@@ -6,9 +6,7 @@ const path = require('path');
 
 const PORT = process.env.PORT || 3000;
 
-const server = app()
-	.use(
-	.listen(PORT, () => console.log('Listening on ${ PORT }'));
+const server = app();
 
 const io = socketIO(server);
 
@@ -97,3 +95,5 @@ projectorIO.on('connection', function(socket) {
 		screensIO.emit('replay request');
 	});
 });
+
+server.listen(PORT, () => console.log('Listening on ${ PORT }'));
