@@ -181,29 +181,29 @@ var convolveFiles = [
 	
 	// www.inculture.eu
 	// www.progettocresco.com
-	"/convolution/1_criptadisansebastiano.wav",
+	"convolution/1_criptadisansebastiano.wav",
 
 	// www.openairlib.net
 	// Audiolab, University of York
 	// Dr. Damian T. Murphy
-	"/convolution/2_tyndallbrucemonument.wav",
+	"convolution/2_tyndallbrucemonument.wav",
 
 	// www.inculture.eu
 	// www.progettocresco.com
-	"/convolution/5_castellodegualtieriis.wav",
+	"convolution/5_castellodegualtieriis.wav",
 
 	// www.openairlib.net
 	// Nick Green and Dr Paul Oliver
-	"/convolution/7_kinoullaisle.wav",
+	"convolution/7_kinoullaisle.wav",
 
 	// www.openairlib.net
 	// Audiolab, University of York
 	// Damian T. Murphy
-	"/convolution/8_yorkminster.wav",
+	"convolution/8_yorkminster.wav",
 	
 	// www.openairlib.net
 	// Nick Green
-	"/convolution/9_arbroathabbeysacristy.wav",
+	"convolution/9_arbroathabbeysacristy.wav",
 
 ];
 

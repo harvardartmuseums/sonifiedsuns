@@ -1,59 +1,69 @@
-var app = require('express')();
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
-var fs = require('fs');
+"use strict";
+
+const app = require('express')();
+const socketIO = require('socket.io');
+const path = require('path');
+
+const PORT = process.env.PORT || 3000;
+
+const server = app();
+
+server.listen(PORT, () => console.log('Listening on ${ PORT }'));
+
+const io = socketIO(server);
+
 var image = null;
 
-app.get('/projectors.html', function(req, res){
-	res.sendFile(__dirname + '/projectors.html');
+server.get('projectors.html', function(req, res){
+	res.sendFile(path.join(__dirname, 'projectors.html'));
 });
 
-app.get('/screens.html', function(req, res){
-	res.sendFile(__dirname + '/screens.html');
+server.get('screens.html', function(req, res){
+	res.sendFile(path.join(__dirname, 'screens.html'));
 });
 
-app.get('/screens.js', function(req, res){
-	res.sendFile(__dirname + '/screens.js');
+server.get('screens.js', function(req, res){
+	res.sendFile(path.join(__dirname, 'screens.js'));
 });
 
-app.get('/convolution/1_criptadisansebastiano.wav', function(req, res){
-	res.sendFile(__dirname + '/convolution/1_criptadisansebastiano.wav');
+server.get('convolution/1_criptadisansebastiano.wav', function(req, res){
+	res.sendFile(path.join(__dirname, 'convolution/1_criptadisansebastiano.wav'));
 });
 
-app.get('/convolution/2_tyndallbrucemonument.wav', function(req, res){
-	res.sendFile(__dirname + '/convolution/2_tyndallbrucemonument.wav');
+server.get('convolution/2_tyndallbrucemonument.wav', function(req, res){
+	res.sendFile(path.join(__dirname, 'convolution/2_tyndallbrucemonument.wav'));
 });
 
-app.get('/convolution/3_falklandpalacebottledungeon.wav', function(req, res){
-	res.sendFile(__dirname + '/convolution/3_falklandpalacebottledungeon.wav');
+server.get('convolution/3_falklandpalacebottledungeon.wav', function(req, res){
+	res.sendFile(path.join(__dirname, 'convolution/3_falklandpalacebottledungeon.wav'));
 });
 
-app.get('/convolution/4_centralhalluniversityofyork.wav', function(req, res){
-	res.sendFile(__dirname + '/convolution/4_centralhalluniversityofyork.wav');
+server.get('convolution/4_centralhalluniversityofyork.wav', function(req, res){
+	res.sendFile(path.join(__dirname, 'convolution/4_centralhalluniversityofyork.wav'));
 });
 
-app.get('/convolution/5_castellodegualtieriis.wav', function(req, res){
-	res.sendFile(__dirname + '/convolution/5_castellodegualtieriis.wav');
+server.get('convolution/5_castellodegualtieriis.wav', function(req, res){
+	res.sendFile(path.join(__dirname, 'convolution/5_castellodegualtieriis.wav'));
 });
 
-app.get('/convolution/6_stmargaretschurch.wav', function(req, res){
-	res.sendFile(__dirname + '/convolution/6_stmargaretschurch.wav');
+server.get('convolution/6_stmargaretschurch.wav', function(req, res){
+	res.sendFile(path.join(__dirname, 'convolution/6_stmargaretschurch.wav'));
 });
 
-app.get('/convolution/7_kinoullaisle.wav', function(req, res){
-	res.sendFile(__dirname + '/convolution/7_kinoullaisle.wav');
+server.get('convolution/7_kinoullaisle.wav', function(req, res){
+	res.sendFile(path.join(__dirname, 'convolution/7_kinoullaisle.wav'));
 });
 
-app.get('/convolution/8_yorkminster.wav', function(req, res){
-	res.sendFile(__dirname + '/convolution/8_yorkminster.wav');
+server.get('convolution/8_yorkminster.wav', function(req, res){
+	res.sendFile(path.join(__dirname, 'convolution/8_yorkminster.wav'));
 });
 
-app.get('/convolution/9_arbroathabbeysacristy.wav', function(req, res){
-	res.sendFile(__dirname + '/convolution/9_arbroathabbeysacristy.wav');
+server.get('convolution/9_arbroathabbeysacristy.wav', function(req, res){
+	res.sendFile(path.join(__dirname, 'convolution/9_arbroathabbeysacristy.wav'));
 });
 
-app.get('/js/config.js', function(req, res){
-	res.sendFile(__dirname + '/js/config.js');
+server.get('js/config.js', function(req, res){
+	res.sendFile(path.join(__dirname, 'js/config.js'));
 });
 
 var screensIO = io.of('/screens-namespace');
@@ -86,7 +96,4 @@ projectorIO.on('connection', function(socket) {
 	socket.on('replay request', function() {
 		screensIO.emit('replay request');
 	});
-});
-
-http.listen(3000, function(){
 });
