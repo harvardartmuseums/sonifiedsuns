@@ -848,6 +848,7 @@ function setLabel(item) {
 		if (/[0-9]-[0-9]/.test(text)) {
 			text = text.replace("-", " to ");
 		}
+		text = text.replace(/'-/g, "'");
 		if (text.includes("Anonymous") || text.includes("Unidentified")) {
 			voiceEnglish.text = text;
 			synthesis.speak(voiceEnglish);
