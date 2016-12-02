@@ -477,10 +477,10 @@ function doWork() {
 			replay = false;
 			counter++;
 		// mention explanation
-		} else if (counter%9 == 0) {
+		} /*else if (counter%9 == 0) {
 			synthesis.speak(s9);
 			counter++;
-		} else {
+		} */else {
 			getData();
 			counter++;
 		} 
