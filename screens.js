@@ -813,9 +813,11 @@ function setLabel(item) {
 			text = text.replace("-", " to ");
 		}
 
-		if (/No\.[0-9]/.test(text)) {
+		if (/No\.\s*[0-9]/.test(text)) {
 			text = text.replace("No.", "number");
 		}
+
+		text = text.replace(/'-/g, "'");
 
 		speechT.text = text;
 		synthesis.speak(speechT);
@@ -848,7 +850,7 @@ function setLabel(item) {
 		if (/[0-9]-[0-9]/.test(text)) {
 			text = text.replace("-", " to ");
 		}
-		text = text.replace(/'-/g, "'");
+
 		if (text.includes("Anonymous") || text.includes("Unidentified")) {
 			voiceEnglish.text = text;
 			synthesis.speak(voiceEnglish);
