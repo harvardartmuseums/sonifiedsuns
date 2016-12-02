@@ -61,6 +61,8 @@ speechT.lang = 'en-US';
 
 var voiceEnglish = new SpeechSynthesisUtterance();
 voiceEnglish.volume = .1;
+var defaultVoice = new SpeechSynthesisUtterance();
+defaultVoice.volume = .1;
 var voiceBritishEnglish = null;
 var voiceFrench = null;
 var voiceGerman = null;
@@ -246,6 +248,10 @@ function chooseVoice() {
 			s7.voice = voices[i];
 			s8.voice = voices[i];
 			s9.voice = voices[i];
+
+		// Default voic (British English, male)
+		} else if (voices[i].name == "Google UK English Male") {
+			defaultVoice = voices[i];
 
 		// British English
 		} else if (voices[i].name == "Google UK English Female") {
@@ -849,16 +855,16 @@ function setLabel(item) {
 			text = text.replace("-", " to ");
 		}
 		if (text.includes("Anonymous") || text.includes("Unidentified")) {
-			voiceEnglish.text = text;
-			synthesis.speak(voiceEnglish);
-			handleLanguage(item.culture, item.culture);
+			defaultVoice.text = text;
+			synthesis.speak(defaultVoice);
 		} else {
 			handleLanguage(item.culture, text);
 		}
 		text = null;
 	} else if (item.culture != null) {
 		document.getElementById("artist").innerHTML = item.culture;
-		handleLanguage(item.culture, item.culture);
+		defaultVoice.text = item.culture;
+		synthesis.speak(defaultVoice);
 	}
 	artists = null;
 
@@ -924,8 +930,8 @@ function speakLanguage(voice, text) {
 		voice.text = text;
 		synthesis.speak(voice);
 	} else {
-		voiceEnglish.text = text;
-		synthesis.speak(voiceEnglish);
+		defaultVoice.text = text;
+		synthesis.speak(defaultVoice);
 	}
 }
 
@@ -1025,8 +1031,8 @@ function handleLanguage(culture, text) {
 			speakLanguage(voiceFinnish, text);
 			break;
 		default:
-			voiceEnglish.text = text;
-			synthesis.speak(voiceEnglish);
+			defaultVoice.text = text;
+			synthesis.speak(defaultVoice);
 			break;
 	}
 }
