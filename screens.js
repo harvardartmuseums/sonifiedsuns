@@ -251,7 +251,7 @@ function chooseVoice() {
 
 		// Default voic (British English, male)
 		} else if (voices[i].name == "Google UK English Male") {
-			defaultVoice = voices[i];
+			defaultVoice.voice = voices[i];
 
 		// British English
 		} else if (voices[i].name == "Google UK English Female") {
