@@ -783,7 +783,7 @@ function calculateTones(colors, dimensions) {
 		}
 
 		if (max != 0) {
-			saturation = .2 + (range/max)*.8;
+			saturation = .3 + (range/max)*.7;
 		}
 
 		// play tone based on object data
