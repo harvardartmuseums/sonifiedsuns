@@ -233,9 +233,6 @@ s.onend = function (event) {
 s.volume = speechVolume;
 s.lang = 'en-US';
 
-exampleNote = null;
-exampleRoom = null;
-
 
 // modular arithmetic that handles negatives
 function mod(x, y) {
@@ -674,7 +671,6 @@ function playTone(frequency, volume, roomSize, delay) {
 	gain.gain.value = gainValue;
 
 	osc.connect(gain);
-	alert(convolver[roomSize]);
 	gain.connect(convolver[roomSize]);
 
 	// play tone
