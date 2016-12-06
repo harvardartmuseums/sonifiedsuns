@@ -453,7 +453,7 @@ function doWork() {
 		eraseColors();
 
 		// upon request, give description of project
-		if (explanation == true && (counter%19)%2 == 1) {
+		if (explanation == true) {
 			synthesis.speak(s1);
 			synthesis.speak(s2);
 			synthesis.speak(s3);
@@ -471,9 +471,9 @@ function doWork() {
 			replay = false;
 			counter++;
 		// mention explanation
-		} else if (counter%9 == 0) {
+		/*} else if (counter%9 == 0) {
 			synthesis.speak(s9);
-			counter++;
+			counter++;*/
 		} else {
 			getData();
 			counter++;
