@@ -38,6 +38,14 @@ var current = null; // current object
 var explanation = false; // explanation requested
 var done = true;
 var stuck = 0;
+var restartTimer = 30;
+var transitionTimer = 2;
+var sonificationLength = 15;
+var speechVolume = .1;
+var startTime = 9;
+var endTime = 17;
+var explanationFrequence = 9;
+var dimensionCap = 500;
 
 
 var decadePattern = /[0-9]s(?!t)/i; // "30s"/"40s"/etc.
@@ -56,11 +64,11 @@ var possibleNotes = [
 
 // speech objects to read label information
 var speechT = new SpeechSynthesisUtterance();
-speechT.volume = .1;
+speechT.volume = speechVolume;
 speechT.lang = 'en-US';
 
 var voiceEnglish = new SpeechSynthesisUtterance();
-voiceEnglish.volume = .1;
+voiceEnglish.volume = speechVolume;
 var voiceBritishEnglish = null;
 var voiceFrench = null;
 var voiceGerman = null;
@@ -84,10 +92,10 @@ var voiceVietnamese = null;
 var voiceFinnish = null;
 
 var speechD = new SpeechSynthesisUtterance();
-speechD.volume = .1;
+speechD.volume = speechVolume;
 speechD.onend = function (event) {
 	if (done) {
-		setTimeout(doWork, 2000);
+		setTimeout(doWork, transitionTimer*1000);
 	}
 };
 speechD.lang = 'en-US';
@@ -96,13 +104,13 @@ speechD.lang = 'en-US';
 var s1 = new SpeechSynthesisUtterance(
 	"The tones you hear relate to the colors of the object being described."
 );
-s1.volume = .1;
+s1.volume = speechVolume;
 s1.lang = 'en-US';
 
 var s2 = new SpeechSynthesisUtterance(
 	"Low notes are colors at the beginning of the rainbow, like red and orange."
 );
-s2.volume = .1;
+s2.volume = speechVolume;
 s2.onstart = function (event) {
 	playTone(possibleNotes[0], 1, 3, 0);
 };
@@ -111,7 +119,7 @@ s2.lang = 'en-US';
 var s3 = new SpeechSynthesisUtterance(
 	"High notes are colors at the end of the rainbow, like blue and purple."
 );
-s3.volume = .1;
+s3.volume = speechVolume;
 s3.onstart = function (event) {
 	playTone(possibleNotes[15], 1, 3, 0);
 };
@@ -120,13 +128,13 @@ s3.lang = 'en-US';
 var s4 = new SpeechSynthesisUtterance(
 	"Notes that play sooner represent more of the object's color."
 );
-s4.volume = .1;
+s4.volume = speechVolume;
 s4.lang = 'en-US';
 
 var s5 = new SpeechSynthesisUtterance(
 	"Small sounds are small objects."
 );
-s5.volume = .1;
+s5.volume = speechVolume;
 s5.onstart = function (event) {
 	playTone(possibleNotes[11], 1, 0, 0);
 };
@@ -135,7 +143,7 @@ s5.lang = 'en-US';
 var s6 = new SpeechSynthesisUtterance(
 	"Big sounds are big objects."
 );
-s6.volume = .1;
+s6.volume = speechVolume;
 s6.onstart = function (event) {
 	playTone(possibleNotes[11], 1, 5, 0);
 };
@@ -144,7 +152,7 @@ s6.lang = 'en-US';
 var s7 = new SpeechSynthesisUtterance(
 	"Louder sounds are brighter colors."
 );
-s7.volume = .1;
+s7.volume = speechVolume;
 s7.onstart = function (event) {
 	playTone(possibleNotes[11], 1, 3, 0);
 };
@@ -153,12 +161,12 @@ s7.lang = 'en-US';
 var s8 = new SpeechSynthesisUtterance(
 	"Softer sounds are duller colors."
 );
-s8.volume = .1;
+s8.volume = speechVolume;
 s8.onstart = function (event) {
 	playTone(possibleNotes[11], .2, 3, 0);
 };
 s8.onend = function (event) {
-	setTimeout(doWork, 2000);
+	setTimeout(doWork, transitionTimer * 1000);
 };
 s8.lang = 'en-US';
 
@@ -166,9 +174,9 @@ var s9 = new SpeechSynthesisUtterance(
 	"For an explanation of the tones, say explain. To hear the previous object again, say replay."
 );
 s9.onend = function (event) {
-	setTimeout(doWork, 2000);
+	setTimeout(doWork, transitionTimer * 1000);
 };
-s9.volume = .1;
+s9.volume = speechVolume;
 s9.lang = 'en-US';
 
 // list of impulse responses with which 
@@ -227,7 +235,7 @@ function setup(){
 	loadIRs();
 	sizeLabel();
 
-	setTimeout(chooseVoice, 10000);
+	setTimeout(chooseVoice, (restartTimer * 1000)/3);
 };
 
 function chooseVoice() {
@@ -250,120 +258,120 @@ function chooseVoice() {
 		// British English
 		} else if (voices[i].name == "Google UK English Female") {
 			voiceBritishEnglish = new SpeechSynthesisUtterance();
-			voiceBritishEnglish.volume = .1;
+			voiceBritishEnglish.volume = speechVolume;
 			voiceBritishEnglish.voice = voices[i];
 		// German
 		} else if (voices[i].lang == "de-DE") {
 			voiceGerman = new SpeechSynthesisUtterance();
-			voiceGerman.volume = .1;
+			voiceGerman.volume = speechVolume;
 			voiceGerman.voice = voices[i];
 		
 		// Spanish
 		} else if (voices[i].lang == "es-ES") {
 			voiceSpanish = new SpeechSynthesisUtterance();
-			voiceSpanish.volume = .1;
+			voiceSpanish.volume = speechVolume;
 			voiceSpanish.voice = voices[i];
 		
 		// French
 		} else if (voices[i].lang == "fr-FR") {
 			voiceFrench = new SpeechSynthesisUtterance();
-			voiceFrench.volume = .1;
+			voiceFrench.volume = speechVolume;
 			voiceFrench.voice = voices[i];
 		
 		// Italian
 		} else if (voices[i].lang == "it-IT") {
 			voiceItalian = new SpeechSynthesisUtterance();
-			voiceItalian.volume = .1;
+			voiceItalian.volume = speechVolume;
 			voiceItalian.voice = voices[i];
 		
 		// Japanese
 		} else if (voices[i].lang == "ja-JP") {
 			voiceJapanese = new SpeechSynthesisUtterance();
-			voiceJapanese.volume = .1;
+			voiceJapanese.volume = speechVolume;
 			voiceJapanese.voice = voices[i];
 		
 		// Korean
 		} else if (voices[i].lang == "ko-KR") {
 			voiceKorean = new SpeechSynthesisUtterance();
-			voiceKorean.volume = .1;
+			voiceKorean.volume = speechVolume;
 			voiceKorean.voice = voices[i];
 		
 		// Dutch
 		} else if (voices[i].lang == "nl-NL") {
 			voiceDutch = new SpeechSynthesisUtterance();
-			voiceDutch.volume = .1;
+			voiceDutch.volume = speechVolume;
 			voiceDutch.voice = voices[i];
 		
 		// Polish
 		} else if (voices[i].lang == "pl-PL") {
 			voicePolish = new SpeechSynthesisUtterance();
-			voicePolish.volume = .1;
+			voicePolish.volume = speechVolume;
 			voicePolish.voice = voices[i];
 		
 		// Portuguese
 		} else if (voices[i].lang == "pt-BR") {
 			voicePortuguese = new SpeechSynthesisUtterance();
-			voicePortuguese.volume = .1;
+			voicePortuguese.volume = speechVolume;
 			voicePortuguese.voice = voices[i];
 		
 		// Russian
 		} else if (voices[i].lang == "ru-RU") {
 			voiceRussian = new SpeechSynthesisUtterance();
-			voiceRussian.volume = .1;
+			voiceRussian.volume = speechVolume;
 			voiceRussian.voice = voices[i];
 		
 		// Chinese
 		} else if (voices[i].lang == "zh-CN") {
 			voiceChinese = new SpeechSynthesisUtterance();
-			voiceChinese.volume = .1;
+			voiceChinese.volume = speechVolume;
 			voiceChinese.voice = voices[i];
 		
 		// Thai
 		} else if (voices[i].lang == "th-TH") {
 			voiceThai = new SpeechSynthesisUtterance();
-			voiceThai.volume = .1;
+			voiceThai.volume = speechVolume;
 			voiceThai.voice = voices[i];
 		
 		// Turkish
 		} else if (voices[i].lang == "tr-TR") {
 			voiceTurkish = new SpeechSynthesisUtterance();
-			voiceTurkish.volume = .1;
+			voiceTurkish.volume = speechVolume;
 			voiceTurkish.voice = voices[i];
 		
 		// Vietnamese
 		} else if (voices[i].lang == "vi-VN") {
 			voiceTurkish = new SpeechSynthesisUtterance();
-			voiceTurkish.volume = .1;
+			voiceTurkish.volume = speechVolume;
 			voiceTurkish.voice = voices[i];
 		
 		// Finnish
 		} else if (voices[i].lang == "fi-FI") {
 			voiceFinnish = new SpeechSynthesisUtterance();
-			voiceFinnish.volume = .1;
+			voiceFinnish.volume = speechVolume;
 			voiceFinnish.voice = voices[i];
 		
 		// Danish
 		} else if (voices[i].lang == "da-DK") {
 			voiceDanish = new SpeechSynthesisUtterance();
-			voiceDanish.volume = .1;
+			voiceDanish.volume = speechVolume;
 			voiceDanish.voice = voices[i];
 		
 		// Hungarian
 		} else if (voices[i].lang == "hu-HU") {
 			voiceHungarian = new SpeechSynthesisUtterance();
-			voiceHungarian.volume = .1;
+			voiceHungarian.volume = speechVolume;
 			voiceHungarian.voice = voices[i];
 		
 		// Norwegian
 		} else if (voices[i].lang == "nb-NO") {
 			voiceNorwegian = new SpeechSynthesisUtterance();
-			voiceNorwegian.volume = .1;
+			voiceNorwegian.volume = speechVolume;
 			voiceNorwegian.voice = voices[i];
 		
 		// Swedish
 		} else if (voices[i].lang == "sv-SE") {
 			voiceSwedish = new SpeechSynthesisUtterance();
-			voiceSwedish.volume = .1;
+			voiceSwedish.volume = speechVolume;
 			voiceSwedish.voice = voices[i];
 		}
 	}
@@ -414,7 +422,7 @@ svg.setAttribute("height", height);
 // begin sonifying objects, and double
 // check that it's still running every
 // thirty seconds
-window.setInterval(restart, 30000);
+window.setInterval(restart, restartTimer * 1000);
 
 
 // fixes label and canvas to fit window on resize
@@ -449,7 +457,7 @@ function doWork() {
 
 	stuck = 0;
 
-	if (date.getHours() >= 9 && date.getHours() < 18) {
+	if (date.getHours() >= startTime && date.getHours() < endTime) {
 		eraseColors();
 
 		// upon request, give description of project
@@ -471,26 +479,19 @@ function doWork() {
 			replay = false;
 			counter++;
 		// mention explanation
-		/*} else if (counter%9 == 0) {
+		/*} else if (counter%explanationFrequence == 0) {
 			synthesis.speak(s9);
 			counter++;*/
 		} else {
 			getData();
 			counter++;
 		} 
-
-	// just after five, reload the page
-	} else if (date.getHours() == 18 && date.getMinutes() == 2 
-	    && counter != 0) {
-		location.reload();
 	}
 }
 
 // when phone places an explain request, handle
 socket.on('explain request', function() {
-	if (midExplanation == 0) {
-		explanation = true;
-	};
+	explanation = true;
 });
 
 // when phone places a replay request, handle
@@ -594,8 +595,7 @@ function blastColors(colors) {
 		}
 
 		// moves sun away from center 
-		// after 14 seconds
-		setTimeout(moveSun, 14000);
+		setTimeout(moveSun, (sonificationLength - 1) * 1000);
 
 		g = null;
 		c = null;
@@ -700,23 +700,23 @@ function getSize(dimensions) {
 			var d2 = 1;
 		}
 
-		// cap size at 500
-		if (d1 > 500) {
-			d1 = 500;
+		// cap size 
+		if (d1 > dimensionCap) {
+			d1 = dimensionCap;
 		}
-		if (d2 > 500) {
-			d2 = 500;
+		if (d2 > dimensionCap) {
+			d2 = dimensionCap;
 		}
 
 		// use logarithmic scale
 		if ((d1 > 0) && (d2 > 0)) {
-			size = Math.round(5*Math.log(Math.sqrt(d1*d2))/6.2146);
+			size = Math.round((convolver.length - 1)*Math.log(Math.sqrt(d1*d2))/Math.log(cap));
 		}
 
 		if (size < 0) {
 			size = 0;
-		} else if (size > 5) {
-			size = 5;
+		} else if (size > (convolver.length - 1)) {
+			size = (convolver.length - 1);
 		}
 		
 		dArray = null;
@@ -787,11 +787,10 @@ function calculateTones(colors, dimensions) {
 		}
 
 		// play tone based on object data
-		// delay is scaled to 12 seconds
 		playTone(possibleNotes[hue], saturation, 
-				size, 12 - c.percent*12);
+				size, (1 - c.percent)*(4*sonificationLength/5));
 	});
-	setTimeout(proceed, 15000);
+	setTimeout(proceed, sonificationLength * 1000);
 	size = null;
 	colors = null;
 	dimensions = null;
