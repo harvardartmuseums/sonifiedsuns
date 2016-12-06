@@ -710,7 +710,7 @@ function getSize(dimensions) {
 
 		// use logarithmic scale
 		if ((d1 > 0) && (d2 > 0)) {
-			size = Math.round((convolver.length - 1)*Math.log(Math.sqrt(d1*d2))/Math.log(cap));
+			size = Math.round((convolver.length - 1)*Math.log(Math.sqrt(d1*d2))/Math.log(dimensionCap));
 		}
 
 		if (size < 0) {
