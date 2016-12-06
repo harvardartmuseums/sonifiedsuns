@@ -100,6 +100,9 @@ speechD.onend = function (event) {
 };
 speechD.lang = 'en-US';
 
+var exampleNote = possibleNotes[Math.ceil(possibleNotes.length/2)];
+var exampleRoom = Math.ceil(convolveFiles.length/2);
+
 // speech objects to play explanatory text
 var s1 = new SpeechSynthesisUtterance(
 	"The tones you hear relate to the colors of the object being described."
@@ -112,7 +115,7 @@ var s2 = new SpeechSynthesisUtterance(
 );
 s2.volume = speechVolume;
 s2.onstart = function (event) {
-	playTone(possibleNotes[0], 1, 3, 0);
+	playTone(possibleNotes[0], 1, exampleRoom, 0);
 };
 s2.lang = 'en-US';
 
@@ -121,7 +124,7 @@ var s3 = new SpeechSynthesisUtterance(
 );
 s3.volume = speechVolume;
 s3.onstart = function (event) {
-	playTone(possibleNotes[15], 1, 3, 0);
+	playTone(possibleNotes[possibleNotes.length - 1], 1, exampleRoom, 0);
 };
 s3.lang = 'en-US';
 
@@ -136,7 +139,7 @@ var s5 = new SpeechSynthesisUtterance(
 );
 s5.volume = speechVolume;
 s5.onstart = function (event) {
-	playTone(possibleNotes[11], 1, 0, 0);
+	playTone(exampleNote, 1, 0, 0);
 };
 s5.lang = 'en-US';
 
@@ -145,7 +148,7 @@ var s6 = new SpeechSynthesisUtterance(
 );
 s6.volume = speechVolume;
 s6.onstart = function (event) {
-	playTone(possibleNotes[11], 1, 5, 0);
+	playTone(exampleNote,  1, 5, 0);
 };
 s6.lang = 'en-US';
 
@@ -154,7 +157,7 @@ var s7 = new SpeechSynthesisUtterance(
 );
 s7.volume = speechVolume;
 s7.onstart = function (event) {
-	playTone(possibleNotes[11], 1, 3, 0);
+	playTone(exampleNote, 1, exampleRoom, 0);
 };
 s7.lang = 'en-US';
 
@@ -163,7 +166,7 @@ var s8 = new SpeechSynthesisUtterance(
 );
 s8.volume = speechVolume;
 s8.onstart = function (event) {
-	playTone(possibleNotes[11], .2, 3, 0);
+	playTone(exampleNote, .2, exampleRoom, 0);
 };
 s8.onend = function (event) {
 	setTimeout(doWork, transitionTimer * 1000);
@@ -178,6 +181,9 @@ s9.onend = function (event) {
 };
 s9.volume = speechVolume;
 s9.lang = 'en-US';
+
+exampleNote = null;
+exampleRoom = null;
 
 // list of impulse responses with which 
 // to convolve the tones produced to give 
@@ -461,7 +467,7 @@ function doWork() {
 		eraseColors();
 
 		// upon request, give description of project
-		if (explanation == true) {
+		if (counter == 0) {//(explanation == true) {
 			synthesis.speak(s1);
 			synthesis.speak(s2);
 			synthesis.speak(s3);
@@ -472,14 +478,14 @@ function doWork() {
 			synthesis.speak(s8);
 
 			explanation = false;
-		} else if (replay == true) {
+		/*} else if (replay == true) {
 			processData(previous);
 			previous = null;
 			current = null;
 			replay = false;
 			counter++;
 		// mention explanation
-		/*} else if (counter%explanationFrequence == 0) {
+		} else if (counter%explanationFrequence == 0) {
 			synthesis.speak(s9);
 			counter++;*/
 		} else {
