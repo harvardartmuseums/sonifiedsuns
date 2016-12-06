@@ -100,90 +100,6 @@ speechD.onend = function (event) {
 };
 speechD.lang = 'en-US';
 
-var exampleNote = possibleNotes[Math.ceil(possibleNotes.length/2)];
-var exampleRoom = Math.ceil(convolveFiles.length/2);
-
-// speech objects to play explanatory text
-var s1 = new SpeechSynthesisUtterance(
-	"The tones you hear relate to the colors of the object being described."
-);
-s1.volume = speechVolume;
-s1.lang = 'en-US';
-
-var s2 = new SpeechSynthesisUtterance(
-	"Low notes are colors at the beginning of the rainbow, like red and orange."
-);
-s2.volume = speechVolume;
-s2.onstart = function (event) {
-	playTone(possibleNotes[0], 1, exampleRoom, 0);
-};
-s2.lang = 'en-US';
-
-var s3 = new SpeechSynthesisUtterance(
-	"High notes are colors at the end of the rainbow, like blue and purple."
-);
-s3.volume = speechVolume;
-s3.onstart = function (event) {
-	playTone(possibleNotes[possibleNotes.length - 1], 1, exampleRoom, 0);
-};
-s3.lang = 'en-US';
-
-var s4 = new SpeechSynthesisUtterance(
-	"Notes that play sooner represent more of the object's color."
-);
-s4.volume = speechVolume;
-s4.lang = 'en-US';
-
-var s5 = new SpeechSynthesisUtterance(
-	"Small sounds are small objects."
-);
-s5.volume = speechVolume;
-s5.onstart = function (event) {
-	playTone(exampleNote, 1, 0, 0);
-};
-s5.lang = 'en-US';
-
-var s6 = new SpeechSynthesisUtterance(
-	"Big sounds are big objects."
-);
-s6.volume = speechVolume;
-s6.onstart = function (event) {
-	playTone(exampleNote,  1, 5, 0);
-};
-s6.lang = 'en-US';
-
-var s7 = new SpeechSynthesisUtterance(
-	"Louder sounds are brighter colors."
-);
-s7.volume = speechVolume;
-s7.onstart = function (event) {
-	playTone(exampleNote, 1, exampleRoom, 0);
-};
-s7.lang = 'en-US';
-
-var s8 = new SpeechSynthesisUtterance(
-	"Softer sounds are duller colors."
-);
-s8.volume = speechVolume;
-s8.onstart = function (event) {
-	playTone(exampleNote, .2, exampleRoom, 0);
-};
-s8.onend = function (event) {
-	setTimeout(doWork, transitionTimer * 1000);
-};
-s8.lang = 'en-US';
-
-var s9 = new SpeechSynthesisUtterance(
-	"For an explanation of the tones, say explain. To hear the previous object again, say replay."
-);
-s9.onend = function (event) {
-	setTimeout(doWork, transitionTimer * 1000);
-};
-s9.volume = speechVolume;
-s9.lang = 'en-US';
-
-exampleNote = null;
-exampleRoom = null;
 
 // list of impulse responses with which 
 // to convolve the tones produced to give 
@@ -225,6 +141,102 @@ var convolveFiles = [
 var convolver = [];
 
 
+var exampleNote = possibleNotes[Math.ceil(possibleNotes.length/2)];
+var exampleRoom = Math.ceil(convolveFiles.length/2);
+
+var explanationSpeech = [];
+
+// speech objects to play explanatory text
+var s = new SpeechSynthesisUtterance(
+	"The tones you hear relate to the colors of the object being described."
+);
+s.volume = speechVolume;
+s.lang = 'en-US';
+explanationSpeech.push(s);
+
+s = new SpeechSynthesisUtterance(
+	"Low notes are colors at the beginning of the rainbow, like red and orange."
+);
+s.volume = speechVolume;
+s.onstart = function (event) {
+	playTone(possibleNotes[0], 1, exampleRoom, 0);
+};
+s.lang = 'en-US';
+explanationSpeech.push(s);
+
+s = new SpeechSynthesisUtterance(
+	"High notes are colors at the end of the rainbow, like blue and purple."
+);
+s.volume = speechVolume;
+s.onstart = function (event) {
+	playTone(possibleNotes[possibleNotes.length - 1], 1, exampleRoom, 0);
+};
+s.lang = 'en-US';
+explanationSpeech.push(s);
+
+s = new SpeechSynthesisUtterance(
+	"Notes that play sooner represent more of the object's color."
+);
+s.volume = speechVolume;
+s.lang = 'en-US';
+explanationSpeech.push(s);
+
+s = new SpeechSynthesisUtterance(
+	"Small sounds are small objects."
+);
+s.volume = speechVolume;
+s.onstart = function (event) {
+	playTone(exampleNote, 1, 0, 0);
+};
+s.lang = 'en-US';
+explanationSpeech.push(s);
+
+s = new SpeechSynthesisUtterance(
+	"Big sounds are big objects."
+);
+s.volume = speechVolume;
+s.onstart = function (event) {
+	playTone(exampleNote,  1, 5, 0);
+};
+s.lang = 'en-US';
+explanationSpeech.push(s);
+
+s = new SpeechSynthesisUtterance(
+	"Louder sounds are brighter colors."
+);
+s.volume = speechVolume;
+s.onstart = function (event) {
+	playTone(exampleNote, 1, exampleRoom, 0);
+};
+s.lang = 'en-US';
+explanationSpeech.push(s);
+
+s = new SpeechSynthesisUtterance(
+	"Softer sounds are duller colors."
+);
+s.volume = speechVolume;
+s.onstart = function (event) {
+	playTone(exampleNote, .2, exampleRoom, 0);
+};
+s.onend = function (event) {
+	setTimeout(doWork, transitionTimer * 1000);
+};
+s.lang = 'en-US';
+explanationSpeech.push(s);
+
+s = new SpeechSynthesisUtterance(
+	"For an explanation of the tones, say explain. To hear the previous object again, say replay."
+);
+s.onend = function (event) {
+	setTimeout(doWork, transitionTimer * 1000);
+};
+s.volume = speechVolume;
+s.lang = 'en-US';
+
+exampleNote = null;
+exampleRoom = null;
+
+
 // modular arithmetic that handles negatives
 function mod(x, y) {
 	return (x%y + y)%y;
@@ -251,15 +263,10 @@ function chooseVoice() {
 			voiceEnglish.voice = voices[i];
 			speechT.voice = voices[i];
 			speechD.voice = voices[i];
-			s1.voice = voices[i];
-			s2.voice = voices[i];
-			s3.voice = voices[i];
-			s4.voice = voices[i];
-			s5.voice = voices[i];
-			s6.voice = voices[i];
-			s7.voice = voices[i];
-			s8.voice = voices[i];
-			s9.voice = voices[i];
+			for (var j = 0; j < explanationSpeech.length; j++) {
+				explanationSpeech[j].voice = voices[i];
+			}
+			s.voice = voices[i];
 
 		// British English
 		} else if (voices[i].name == "Google UK English Female") {
@@ -468,14 +475,9 @@ function doWork() {
 
 		// upon request, give description of project
 		if (counter == 0) {//(explanation == true) {
-			synthesis.speak(s1);
-			synthesis.speak(s2);
-			synthesis.speak(s3);
-			synthesis.speak(s4);
-			synthesis.speak(s5);
-			synthesis.speak(s6);
-			synthesis.speak(s7);
-			synthesis.speak(s8);
+			for (var i = 0; i < explanationSpeech.length; i++) {
+				synthesis.speak(explanationSpeech[i]);
+			}
 
 			explanation = false;
 		/*} else if (replay == true) {
