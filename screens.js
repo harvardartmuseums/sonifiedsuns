@@ -35,7 +35,7 @@ var threshold = 25; // rounds before erasing sun
 var replay = false; // replay requested
 var previous = null; // previous object (to replay)
 var current = null; // current object
-var explanation = false; // explanation requested
+var explanation = true; // explanation requested
 var done = true;
 var stuck = 0;
 var restartTimer = 30;
@@ -474,7 +474,7 @@ function doWork() {
 		eraseColors();
 
 		// upon request, give description of project
-		if (counter == 0) {//(explanation == true) {
+		if (explanation == true) {
 			for (var i = 0; i < explanationSpeech.length; i++) {
 				synthesis.speak(explanationSpeech[i]);
 			}
