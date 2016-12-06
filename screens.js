@@ -38,7 +38,7 @@ var current = null; // current object
 var explanation = true; // explanation requested
 var done = true;
 var stuck = 0;
-var restartTimer = 40;
+var restartTimer = 30;
 var transitionTimer = 2;
 var sonificationLength = 15;
 var speechVolume = .1;
@@ -674,6 +674,7 @@ function playTone(frequency, volume, roomSize, delay) {
 	gain.gain.value = gainValue;
 
 	osc.connect(gain);
+	alert(convolver[roomSize]);
 	gain.connect(convolver[roomSize]);
 
 	// play tone
