@@ -38,7 +38,7 @@ var current = null; // current object
 var explanation = true; // explanation requested
 var done = true;
 var stuck = 0;
-var restartTimer = 30;
+var restartTimer = 40;
 var transitionTimer = 2;
 var sonificationLength = 15;
 var speechVolume = .1;
@@ -142,7 +142,7 @@ var convolver = [];
 
 
 var exampleNote = possibleNotes[Math.ceil(possibleNotes.length/2)];
-var exampleRoom = 3;
+var exampleRoom = Math.ceil(convolveFiles.length/2);
 
 var explanationSpeech = [];
 
