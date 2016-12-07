@@ -483,10 +483,13 @@ function doWork() {
 			current = null;
 			replay = false;
 			counter++;
-		// mention explanation
+		// mention explanation*/
 		} else if (counter%explanationFrequence == 0) {
-			synthesis.speak(s9);
-			counter++;*/
+			//synthesis.speak(s9);
+			//counter++;
+			getData();
+			counter++;
+			explanation = true;
 		} else {
 			getData();
 			counter++;
