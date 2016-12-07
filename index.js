@@ -19,6 +19,10 @@ app.get('/screens.js', function(req, res){
 	res.sendFile(path.join(__dirname, '/screens.js'));
 });
 
+app.get('/wavelength.jpg', function(req, res){
+	res.sendFile(path.join(__dirname, '/wavelength.jpg'));
+});
+
 app.get('/convolution/1_criptadisansebastiano.wav', function(req, res){
 	res.sendFile(path.join(__dirname, '/convolution/1_criptadisansebastiano.wav'));
 });
