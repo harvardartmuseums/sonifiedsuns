@@ -477,19 +477,16 @@ function doWork() {
 			}
 
 			explanation = false;
-		/*} else if (replay == true) {
+		} else if (replay == true) {
 			processData(previous);
 			previous = null;
 			current = null;
 			replay = false;
 			counter++;
-		// mention explanation*/
+		// mention explanation
 		} else if (counter%explanationFrequence == 0) {
-			//synthesis.speak(s9);
-			//counter++;
-			getData();
+			synthesis.speak(s9);
 			counter++;
-			explanation = true;
 		} else {
 			getData();
 			counter++;
