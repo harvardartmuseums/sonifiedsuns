@@ -746,11 +746,15 @@ function getSize(dimensions) {
 }
 
 function restart() {
+	alert("test");
 	if ((synthesis.speaking == false) && (done == true)) {
+		alert("restart");
 		doWork();
 	} else if (stuck < 3) {
+		alert("stuck!");
 		stuck++;
 	} else {
+		alert("override!");
 		doWork();
 	}
 }

@@ -94,11 +94,15 @@ screensIO.on('connection', function(socket) {
 			unconnectedScreen = 1;
 			pairs.push(socket.id + "room");
 		}
+		var pair = pairs[pairs.length - 1];
 		socket.join(pairs[pairs.length - 1]);
 
-		socket.on('new image', function(url) {
-			projectorIO.to(pairs[pairs.length - 1]).emit('new image', url);
+		newImage = function(url) {
+			projectorIO.to(pair).emit('new image', url);
 		});
+
+		socket.on('new image', newImage);
+
 		socket.on('small image', function(url) {
 			projectorIO.to(pairs[pairs.length - 1]).emit('small image', url);
 		});
