@@ -107,8 +107,8 @@ screensIO.on('connection', function(socket) {
 			projectorIO.to(this).emit('copyright');
 		}.bind(pair));
 		socket.on('no image', function() {
-			projectorIO.to(pair.emit('no image');
-		}.bind(this));
+			projectorIO.to(this).emit('no image');
+		}.bind(pair));
 	} 
 });
 
@@ -127,11 +127,11 @@ projectorIO.on('connection', function(socket) {
 		socket.join(pair);
 
 		socket.on('explain request', function() {
-			screensIO.to(pair).emit('explain request');
-		}.bind(this));
+			screensIO.to(this).emit('explain request');
+		}.bind(pair));
 
 		socket.on('replay request', function() {
-			screensIO.to(pair).emit('replay request');
-		}.bind(this));
+			screensIO.to(this).emit('replay request');
+		}.bind(pair));
 	}
 });
