@@ -84,9 +84,13 @@ function testConnection() {
 	}
 }
 
+function refuseScreens() {
+	screensIO.to(this).emit('too many sockets');
+}
+
 screensIO.on('connection', function(socket) {
 	if (unconnectedScreen) {
-		screensIO.to(socket.id).emit('too many sockets');
+		setTimeout(refuseScreens.bind(socket.id), 2000);
 	} else { 
 		if (unconnectedProjector) {
 			unconnectedProjector = 0;
@@ -112,10 +116,13 @@ screensIO.on('connection', function(socket) {
 	} 
 });
 
+function refuseProjector() {
+	projectorIO.to(this).emit('too many sockets');
+}
 
 projectorIO.on('connection', function(socket) {
 	if (unconnectedProjector) {
-		projectorIO.to(socket.id).emit('too many sockets');
+		setTimeout(refuseProjector.bind(socket.id), 2000);
 	} else {
 		if (unconnectedScreen) {
 			unconnectedScreen = 0;
