@@ -38,7 +38,7 @@ var current = null; // current object
 var explanation = true; // explanation requested
 var done = true;
 var stuck = 0;
-var restartTimer = 30;
+var restartTimer = 10;
 var transitionTimer = 2;
 var sonificationLength = 15;
 var speechVolume = .05;
@@ -746,15 +746,11 @@ function getSize(dimensions) {
 }
 
 function restart() {
-	alert("test");
 	if ((synthesis.speaking == false) && (done == true)) {
-		alert("restart");
 		doWork();
-	} else if (stuck < 3) {
-		alert("stuck!");
+	} else if (stuck < 6) {
 		stuck++;
 	} else {
-		alert("override!");
 		doWork();
 	}
 }
