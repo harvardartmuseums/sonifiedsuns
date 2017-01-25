@@ -98,17 +98,17 @@ screensIO.on('connection', function(socket) {
 		socket.join(pair);
 
 		socket.on('new image', function(url) {
-			projectorIO.to(pair).emit('new image', url);
+			projectorIO.to(this).emit('new image', url);
 		}.bind(pair));
 		socket.on('small image', function(url) {
-			projectorIO.to(pair).emit('small image', url);
+			projectorIO.to(this).emit('small image', url);
 		}.bind(pair));
 		socket.on('copyright', function() {
-			projectorIO.to(pair).emit('copyright');
+			projectorIO.to(this).emit('copyright');
 		}.bind(pair));
 		socket.on('no image', function() {
 			projectorIO.to(pair.emit('no image');
-		}.bind(pair));
+		}.bind(this));
 	} 
 });
 
@@ -128,10 +128,10 @@ projectorIO.on('connection', function(socket) {
 
 		socket.on('explain request', function() {
 			screensIO.to(pair).emit('explain request');
-		}.bind(pair));
+		}.bind(this));
 
 		socket.on('replay request', function() {
 			screensIO.to(pair).emit('replay request');
-		}.bind(pair));
+		}.bind(this));
 	}
 });
