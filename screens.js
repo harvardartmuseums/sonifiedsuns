@@ -485,7 +485,7 @@ function doWork() {
 			counter++;
 		// mention explanation
 		} else if (counter%explanationFrequence == 0) {
-			synthesis.speak(s9);
+			synthesis.speak(s);
 			counter++;
 		} else {
 			getData();

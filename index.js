@@ -88,17 +88,14 @@ screensIO.on('connection', function(socket) {
 	if (unconnectedScreen) {
 		socket.to(socket.id).emit('too many sockets');
 	} else { 
-		var pair;
-
 		if (unconnectedProjector) {
 			unconnectedProjector = 0;
-			pair = pairs[pairs.length - 1];
-			socket.join(pair);
 		} else {
 			unconnectedScreen = 1;
-			pairs.push(socket.id);
-			pair = pairs[pairs.length - 1];
+			pairs.push(socket.id + "room");
 		}
+		var pair = pairs[pairs.length - 1];
+		socket.join(pair);
 
 		socket.on('new image', function(url) {
 			projectorIO.to(pair).emit('new image', url);
@@ -120,17 +117,14 @@ projectorIO.on('connection', function(socket) {
 	if (unconnectedProjector) {
 		socket.to(socket.id).emit('too many sockets');
 	} else {
-		var pair;
-
 		if (unconnectedScreen) {
 			unconnectedScreen = 0;
-			pair = pairs[pairs.length - 1];
-			socket.join(pair);
 		} else {
 			unconnectedProjector = 1;
-			pairs.push(socket.id);
-			pair = pairs[pairs.length - 1];
+			pairs.push(socket.id + "room");
 		}
+		var pair = pairs[pairs.length - 1];
+		socket.join(pair);
 
 		socket.on('explain request', function() {
 			screensIO.to(pair).emit('explain request');
