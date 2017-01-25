@@ -137,6 +137,16 @@ var socket = io('/projectors-namespace'); // to listen for image change
 var shade = 4;
 var recognition = new webkitSpeechRecognition();
 
+socket.on('too many sockets', function() {
+	document.body.innerHTML = '';
+	alert("Another instance of this page is attempting to connect; please wait a few minutes and try again.");
+});
+
+socket.on('timed out', function() {
+	document.body.innerHTML = '';
+	alert("This attempt to connect timed out; please try again. Be sure to open an instance of http://sonifiedsuns.herokuapps.com/screens.html within a minute of reloading this page.");
+});
+
 // if there's a new image that can be
 // displayed full screen, load it and
 // hide all the other messages

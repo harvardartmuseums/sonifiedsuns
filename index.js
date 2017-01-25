@@ -64,28 +64,80 @@ server.listen(PORT);
 
 var screensIO = io.of('/screens-namespace');
 var projectorIO = io.of('/projectors-namespace');
+var pairs = [];
+var unconnectedScreen = 0;
+var unconnectedProjector = 0;
+
+setInterval(testConnection, 10000);
+
+function testConnection() {
+	if (unconnectedScreen == 6) {
+		screensIO.to(pairs.pop()).emit('timed out');
+		unconnectedScreen = 0;
+	} else if (unconnectedProjector == 6) {
+		projectorIO.to(pairs.pop()).emit('timed out');
+		unconnectedProjector = 0;
+	} else if (unconnectedScreen) {
+		unconnectedScreen++;
+	} else if (unconnectedProjector) {
+		unconnectedProjector++;
+	}
+}
 
 screensIO.on('connection', function(socket) {
-	socket.on('new image', function(url) {
-		projectorIO.emit('new image', url);
-	});
-	socket.on('small image', function(url) {
-		projectorIO.emit('small image', url);
-	});
-	socket.on('copyright', function() {
-		projectorIO.emit('copyright');
-	});
-	socket.on('no image', function() {
-		projectorIO.emit('no image');
-	});
+	if (unconnectedScreen) {
+		socket.to(socket.id).emit('too many sockets');
+	} else { 
+		var pair;
+
+		if (unconnectedProjector) {
+			unconnectedProjector = 0;
+			pair = pairs[pairs.length - 1];
+			socket.join(pair);
+		} else {
+			unconnectedScreen = 1;
+			pairs.push(socket.id);
+			pair = pairs[pairs.length - 1];
+		}
+
+		socket.on('new image', function(url) {
+			projectorIO.to(pair).emit('new image', url);
+		});
+		socket.on('small image', function(url) {
+			projectorIO.to(pair).emit('small image', url);
+		});
+		socket.on('copyright', function() {
+			projectorIO.to(pair).emit('copyright');
+		});
+		socket.on('no image', function() {
+			projectorIO.to(pair).emit('no image');
+		});
+	} 
 });
 
 
 projectorIO.on('connection', function(socket) {
-	socket.on('explain request', function() {
-		screensIO.emit('explain request');
-	});
-	socket.on('replay request', function() {
-		screensIO.emit('replay request');
-	});
+	if (unconnectedProjector) {
+		socket.to(socket.id).emit('too many sockets');
+	} else {
+		var pair;
+
+		if (unconnectedScreen) {
+			unconnectedScreen = 0;
+			pair = pairs[pairs.length - 1];
+			socket.join(pair);
+		} else {
+			unconnectedProjector = 1;
+			pairs.push(socket.id);
+			pair = pairs[pairs.length - 1];
+		}
+
+		socket.on('explain request', function() {
+			screensIO.to(pair).emit('explain request');
+		});
+
+		socket.on('replay request', function() {
+			screensIO.to(pair).emit('replay request');
+		});
+	}
 });

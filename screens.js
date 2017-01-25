@@ -506,6 +506,16 @@ socket.on('replay request', function() {
 	};
 });
 
+socket.on('too many sockets', function() {
+	document.body.innerHTML = '';
+	alert("Another instance of this page is attempting to connect; please wait a few minutes and try again.");
+});
+
+socket.on('timed out', function() {
+	document.body.innerHTML = '';
+	alert("This attempt to connect timed out; please try again. Be sure to open an instance of http://sonifiedsuns.herokuapps.com/projectors.html within a minute of reloading this page.");
+});
+
 // gets a random object with color and 
 // dimension data and visualizes/sonifies
 // it 
