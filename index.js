@@ -95,23 +95,20 @@ screensIO.on('connection', function(socket) {
 			pairs.push(socket.id + "room");
 		}
 		var pair = pairs[pairs.length - 1];
-		socket.join(pairs[pairs.length - 1]);
+		socket.join(pair);
 
-		newImage = function(url) {
+		socket.on('new image', function(url) {
 			projectorIO.to(pair).emit('new image', url);
-		});
-
-		socket.on('new image', newImage);
-
+		}.bind(pair));
 		socket.on('small image', function(url) {
-			projectorIO.to(pairs[pairs.length - 1]).emit('small image', url);
-		});
+			projectorIO.to(pair).emit('small image', url);
+		}.bind(pair));
 		socket.on('copyright', function() {
-			projectorIO.to(pairs[pairs.length - 1]).emit('copyright');
-		});
+			projectorIO.to(pair).emit('copyright');
+		}.bind(pair));
 		socket.on('no image', function() {
-			projectorIO.to(pairs[pairs.length - 1]).emit('no image');
-		});
+			projectorIO.to(pair.emit('no image');
+		}.bind(pair));
 	} 
 });
 
@@ -126,14 +123,15 @@ projectorIO.on('connection', function(socket) {
 			unconnectedProjector = 1;
 			pairs.push(socket.id + "room");
 		}
-		socket.join(pairs[pairs.length - 1]);
+		var pair = pairs[pairs.length - 1];
+		socket.join(pair);
 
 		socket.on('explain request', function() {
-			screensIO.to(pairs[pairs.length - 1]).emit('explain request');
-		});
+			screensIO.to(pair).emit('explain request');
+		}.bind(pair));
 
 		socket.on('replay request', function() {
-			screensIO.to(pairs[pairs.length - 1]).emit('replay request');
-		});
+			screensIO.to(pair).emit('replay request');
+		}.bind(pair));
 	}
 });
