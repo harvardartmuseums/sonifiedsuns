@@ -86,7 +86,7 @@ function testConnection() {
 
 screensIO.on('connection', function(socket) {
 	if (unconnectedScreen) {
-		socket.to(socket.id).emit('too many sockets');
+		socket.broadcast.to(socket.id).emit('too many sockets');
 	} else { 
 		if (unconnectedProjector) {
 			unconnectedProjector = 0;
