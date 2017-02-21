@@ -223,13 +223,22 @@ s.lang = 'en-US';
 explanationSpeech.push(s);
 
 s = new SpeechSynthesisUtterance(
-	"For an explanation of the tones, say explain."
+	"For an explanation of the tones, say explain. To hear a selection of comments from your fellow visitors, say comments."
 );
 s.onend = function (event) {
 	setTimeout(doWork, transitionTimer * 1000);
 };
 s.volume = speechVolume;
 s.lang = 'en-US';
+
+c = new SpeechSynthesisUtterance(
+	"If you'd like to leave a comment, speak after the tone."
+);
+c.onend = function (event) {
+	setTimeout(doWork, transitionTimer * 1000);
+};
+c.volume = speechVolume;
+c.lang = 'en-US';
 
 
 // modular arithmetic that handles negatives
@@ -478,6 +487,10 @@ function doWork() {
 		// mention explanation
 		} else if (counter%explanationFrequence == 0) {
 			synthesis.speak(s);
+			counter++;
+		} else if (counter%(explanationFrequence*2) == Math.floor(explanationFrequence/2)) {
+			
+			synthesis.speak(c);
 			counter++;
 		} else {
 			getData();
