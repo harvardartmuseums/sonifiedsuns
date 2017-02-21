@@ -508,6 +508,10 @@ function doWork() {
 	}
 }
 
+readComments() {
+
+}
+
 socket.on('explain request', function() {
 	explanation = true;
 });
