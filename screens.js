@@ -235,9 +235,8 @@ var c = new SpeechSynthesisUtterance(
 	"If you'd like to leave a comment, speak after the tone."
 );
 c.onend = function (event) {
-	socket.emit("commenting");
+	socket.emit('commenting');
 	playTone(exampleNote, 1, exampleRoom, 0);
-	alert("commenting");
 };
 c.volume = speechVolume;
 c.lang = 'en-US';
