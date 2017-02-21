@@ -231,7 +231,7 @@ s.onend = function (event) {
 s.volume = speechVolume;
 s.lang = 'en-US';
 
-c = new SpeechSynthesisUtterance(
+var c = new SpeechSynthesisUtterance(
 	"If you'd like to leave a comment, speak after the tone."
 );
 c.onend = function (event) {
