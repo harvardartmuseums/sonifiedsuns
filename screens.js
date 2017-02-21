@@ -32,8 +32,6 @@ var synthesis = window.speechSynthesis;
 var date = new Date(); 
 var counter = 0; // number of 15s rounds so far
 var threshold = 25; // rounds before erasing sun
-var replay = false; // replay requested
-var previous = null; // previous object (to replay)
 var current = null; // current object
 var explanation = false; // explanation requested
 var done = true;
@@ -225,7 +223,7 @@ s.lang = 'en-US';
 explanationSpeech.push(s);
 
 s = new SpeechSynthesisUtterance(
-	"For an explanation of the tones, say explain. To hear the previous object again, say replay."
+	"For an explanation of the tones, say explain."
 );
 s.onend = function (event) {
 	setTimeout(doWork, transitionTimer * 1000);
@@ -477,12 +475,6 @@ function doWork() {
 			}
 
 			explanation = false;
-		} else if (replay == true) {
-			processData(previous);
-			previous = null;
-			current = null;
-			replay = false;
-			counter++;
 		// mention explanation
 		} else if (counter%explanationFrequence == 0) {
 			synthesis.speak(s);
@@ -494,16 +486,8 @@ function doWork() {
 	}
 }
 
-// when phone places an explain request, handle
 socket.on('explain request', function() {
 	explanation = true;
-});
-
-// when phone places a replay request, handle
-socket.on('replay request', function() {
-	if (previous != null) {
-		replay = true;
-	};
 });
 
 socket.on('too many sockets', function() {
@@ -529,7 +513,6 @@ function getData() {
 	xmlrequest.onreadystatechange = function() {
 		if (this.readyState == 4) {
 			if (this.status == 200) {
-				previous = current;
 				current = JSON.parse(this.responseText);
 				processData(current);
 			} else {

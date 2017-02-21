@@ -234,12 +234,6 @@ function setup(){
 			socket.emit('explain request');
 		};
 
-		if ((currentSpeech.indexOf("replay") != -1) ||
-			(currentSpeech.indexOf("repeat") != -1) ||
-			(currentSpeech.indexOf("previous") != -1)) {
-			socket.emit('replay request');
-		};
-
 		i = null;
 		event = null;
 		currentSpeech = null;
