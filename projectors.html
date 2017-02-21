@@ -285,7 +285,7 @@ function commentOff() {
 		comment = "";
 		socket.emit('comment end');
 		commentCounter--;
-	} else if (commentCounter >= 0) {
+	} else if (commentCounter > 0) {
 		commentCounter--;
 	}
 }
