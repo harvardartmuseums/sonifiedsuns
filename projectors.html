@@ -146,6 +146,7 @@ setInterval(commentOff, 1000);
 socket.on('commenting', function() {
 	commenting = true;
 	commentCounter = 3;
+	alert(commentCounter);
 });
 
 socket.on('too many sockets', function() {
@@ -288,7 +289,6 @@ function commentOff() {
 		commentCounter--;
 	} else if (commentCounter > 0) {
 		commentCounter--;
-		alert(commentCounter);
 	}
 }
 
