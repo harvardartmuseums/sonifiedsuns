@@ -508,7 +508,7 @@ function doWork() {
 	}
 }
 
-readComments() {
+function readComments() {
 
 }
 
