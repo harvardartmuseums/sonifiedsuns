@@ -235,7 +235,8 @@ var c = new SpeechSynthesisUtterance(
 	"If you'd like to leave a comment, speak after the tone."
 );
 c.onend = function (event) {
-	setTimeout(doWork, transitionTimer * 1000);
+	playTone(exampleNote, 1, exampleRoom, 0);
+	socket.emit("commenting");
 };
 c.volume = speechVolume;
 c.lang = 'en-US';
@@ -484,12 +485,20 @@ function doWork() {
 			}
 
 			explanation = false;
+
+		// upon request, read selection of comments
+		} else if (readComments == true) {
+			readComments();
+
+			readComments == false;
+
 		// mention explanation
 		} else if (counter%explanationFrequence == 0) {
 			synthesis.speak(s);
 			counter++;
+
+		// solicit comment
 		} else if (counter%(explanationFrequence*2) == Math.floor(explanationFrequence/2)) {
-			
 			synthesis.speak(c);
 			counter++;
 		} else {
@@ -501,6 +510,15 @@ function doWork() {
 
 socket.on('explain request', function() {
 	explanation = true;
+});
+
+socket.on('comment request', function() {
+	readComments = true;
+});
+
+socket.on('comment end', function() {
+	playTone(exampleNote, 1, exampleRoom, 0);
+	setTimeout(doWork, transitionTimer * 1000);
 });
 
 socket.on('too many sockets', function() {

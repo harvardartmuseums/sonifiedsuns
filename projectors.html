@@ -136,6 +136,17 @@ var socket = io('/projectors-namespace'); // to listen for image change
 
 var shade = 4;
 var recognition = new webkitSpeechRecognition();
+var commenting = false;
+var commentCounter = -1;
+var comments = [];
+var comment = "";
+
+setInterval(commentOff, 1000);
+
+socket.on('commenting', function() {
+	commenting = true;
+	commentCounter = 3;
+});
 
 socket.on('too many sockets', function() {
 	document.body.innerHTML = '';
@@ -229,10 +240,19 @@ function setup(){
 			currentSpeech += " " + event.results[i][0].transcript;
 		};
 
-		if ((currentSpeech.indexOf("explain") != -1) ||
-			(currentSpeech.indexOf("explanation") != -1)) {
-			socket.emit('explain request');
-		};
+		if (commenting) {
+			comment += currentSpeech;
+			alert(comment);
+		} else {
+			if ((currentSpeech.indexOf("explain") != -1) ||
+				(currentSpeech.indexOf("explanation") != -1)) {
+				socket.emit('explain request');
+			};
+
+			if (currentSpeech.indexOf("comment") != -1) {
+				socket.emit('comment request');
+			};
+		}
 
 		i = null;
 		event = null;
@@ -257,6 +277,18 @@ function resize() {
 	document.getElementById("instructions").style.width = window.innerWidth + "px";
 	document.getElementById("instructions").style.top = window.innerHeight - 20 + "px";
 };
+
+function commentOff() {
+	if (commentCounter == 0) {
+		commenting = false;
+		comments.push[comment];
+		comment = "";
+		socket.emit('comment end');
+		commentCounter--;
+	} else if (commentCounter >= 0) {
+		commentCounter--;
+	}
+}
 
 </script>
 
