@@ -243,6 +243,7 @@ function setup(){
 		if (commenting) {
 			comment += currentSpeech;
 			alert(comment);
+			commentCounter = 3;
 		} else {
 			if ((currentSpeech.indexOf("explain") != -1) ||
 				(currentSpeech.indexOf("explanation") != -1)) {
@@ -287,6 +288,7 @@ function commentOff() {
 		commentCounter--;
 	} else if (commentCounter > 0) {
 		commentCounter--;
+		alert(commentCounter);
 	}
 }
 
