@@ -144,6 +144,7 @@ var comment = "";
 setInterval(commentOff, 1000);
 
 socket.on('commenting', function() {
+	alert("commenting!");
 	commenting = true;
 	commentCounter = 3;
 });
