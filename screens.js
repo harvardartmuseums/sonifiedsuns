@@ -251,7 +251,7 @@ for (var i = 0; i < 5; i++) {
 	commentReaders[i].lang = 'en-US';
 }
 
-commentReaders[i].onend = function (event) {
+commentReaders[i - 1].onend = function (event) {
 	setTimeout(doWork, transitionTimer * 1000);
 };
 
