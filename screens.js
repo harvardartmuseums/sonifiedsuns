@@ -34,6 +34,8 @@ var counter = 0; // number of 15s rounds so far
 var threshold = 25; // rounds before erasing sun
 var current = null; // current object
 var explanation = false; // explanation requested
+var readComments = false;
+var comments = [];
 var done = true;
 var stuck = 0;
 var restartTimer = 10;
@@ -241,6 +243,18 @@ c.onend = function (event) {
 c.volume = speechVolume;
 c.lang = 'en-US';
 
+var commentReaders = [];
+
+for (var i = 0; i < 5; i++) {
+	commentReaders.push(new SpeechSynthesisUtterance());
+	commentReaders[i].volume = speechVolume;
+	commentReaders[i].lang = 'en-US';
+}
+
+commentReaders[i].onend = function (event) {
+	setTimeout(doWork, transitionTimer * 1000);
+};
+
 
 // modular arithmetic that handles negatives
 function mod(x, y) {
@@ -270,6 +284,9 @@ function chooseVoice() {
 			speechD.voice = voices[i];
 			for (var j = 0; j < explanationSpeech.length; j++) {
 				explanationSpeech[j].voice = voices[i];
+			}
+			for (var j = 0; j < commentReaders.length; j++) {
+				commentReaders[j].voice = voices[i];
 			}
 			s.voice = voices[i];
 
@@ -509,19 +526,23 @@ function doWork() {
 }
 
 function readComments() {
-
+	for (var i = 0; i < comments.length; i++) {
+		commentReader.text = comments[i];
+		synthesis.speak(commentReader);
+	}
 }
 
 socket.on('explain request', function() {
 	explanation = true;
 });
 
-socket.on('comment request', function() {
+socket.on('comment request', function(comments) {
 	readComments = true;
+	comments = comments;
 });
 
 socket.on('comment end', function() {
-	playTone(exampleNote, 1, exampleRoom, 0);
+	playTone(exampleNote, 1, 1, 0);
 	setTimeout(doWork, transitionTimer * 1000);
 });
 

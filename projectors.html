@@ -21,6 +21,41 @@
 	div {
 		box-sizing: border-box;
 	}
+	
+	.comment {
+		position: absolute;
+		width: 25%;
+		height: 10%;
+		padding: 1%;
+		overflow: hidden;
+		background-color: #AAAAAA;
+		color: #FFFFFF;
+	}
+
+	#comment0 {
+		top: 3%;
+		left: 50%;
+	}
+
+	#comment1 {
+		bottom: 1%;
+		left: 0%;
+	}
+
+	#comment2 {
+		bottom: 3%;
+		right: 0%;
+	}
+
+	#comment3 {
+		top: 0%;
+		left: 0%;
+	}
+
+	#comment 4 {
+		top: 5%;
+		right: 0%;
+	}
 
 	.container {
 		padding: 0 2%;
@@ -64,6 +99,13 @@
 </head>
 
 <body>
+
+<div id="comment0" class="comment"></div>
+<div id="comment1" class="comment"></div>
+<div id="comment2" class="comment"></div>
+<div id="comment3" class="comment"></div>
+<div id="comment4" class="comment"></div>
+
 
 <div id="images">
 <div id="i1" class="container">
@@ -139,6 +181,7 @@ var recognition = new webkitSpeechRecognition();
 var commenting = false;
 var commentCounter = -1;
 var comments = [];
+var displayComments = ["No comments recorded yet", "", "", "", ""];
 var comment = "";
 
 setInterval(commentOff, 1000);
@@ -158,6 +201,21 @@ socket.on('timed out', function() {
 	alert("This attempt to connect timed out; please try again. Be sure to open an instance of http://sonifiedsuns.herokuapps.com/screens.html within a minute of reloading this page.");
 });
 
+function resampleComments(list) {
+	var index;
+	displayComments = [];
+	for (i = 0; i < Math.min(list.length, 5); i++) {
+		index = Math.floor(Math.random()*list.length);
+		displayComments.push(list[index]);
+		document.getElementById("comment" + i).innerHTML = list[index];
+		list.splice(index, 1);
+	}
+	for (i = i; i < 5; i++) {
+		displayComments.push("");
+		document.getElementById("comment" + i).innerHTML = "";
+	}	
+}
+
 // if there's a new image that can be
 // displayed full screen, load it and
 // hide all the other messages
@@ -173,6 +231,8 @@ socket.on('new image', function(url) {
 		document.getElementById("s" + shade).style.display = "none";
 		document.getElementById("c" + shade).style.display = "none";
 		document.getElementById("n" + shade).style.display = "none";
+
+		resampleComments(comments);
 });
 
 // if there's a new image that must
@@ -190,6 +250,8 @@ socket.on('small image', function(url) {
 		document.getElementById("s" + shade).style.display = "block";
 		document.getElementById("c" + shade).style.display = "none";
 		document.getElementById("n" + shade).style.display = "none";
+
+		resampleComments(comments);
 });
 
 // if there's no image, display
@@ -206,6 +268,8 @@ socket.on('no image', function() {
 		document.getElementById("s" + shade).style.display = "none";
 		document.getElementById("c" + shade).style.display = "none";
 		document.getElementById("n" + shade).style.display = "block";
+
+		resampleComments(comments);
 });
 
 // if no image can be displayed
@@ -223,6 +287,8 @@ socket.on('copyright', function() {
 		document.getElementById("s" + shade).style.display = "none";
 		document.getElementById("c" + shade).style.display = "block";
 		document.getElementById("n" + shade).style.display = "none";
+
+		resampleComments(comments);
 });
 
 setup();
@@ -251,7 +317,7 @@ function setup(){
 			};
 
 			if (currentSpeech.indexOf("comment") != -1) {
-				socket.emit('comment request');
+				socket.emit('comment request', displayComments);
 			};
 		}
 
