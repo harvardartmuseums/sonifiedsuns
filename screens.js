@@ -236,7 +236,7 @@ var c = new SpeechSynthesisUtterance(
 );
 c.onend = function (event) {
 	socket.emit('commenting');
-	playTone(exampleNote, 1, exampleRoom, 0);
+	playTone(exampleNote, 1, 1, 0);
 };
 c.volume = speechVolume;
 c.lang = 'en-US';
