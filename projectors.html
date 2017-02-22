@@ -145,7 +145,7 @@ setInterval(commentOff, 1000);
 
 socket.on('commenting', function() {
 	commenting = true;
-	commentCounter = 3;
+	commentCounter = 5;
 });
 
 socket.on('too many sockets', function() {
@@ -243,7 +243,7 @@ function setup(){
 		if (commenting) {
 			comment += currentSpeech;
 			alert(comment);
-			commentCounter = 3;
+			commentCounter = 5;
 		} else {
 			if ((currentSpeech.indexOf("explain") != -1) ||
 				(currentSpeech.indexOf("explanation") != -1)) {
