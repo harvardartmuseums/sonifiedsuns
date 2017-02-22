@@ -142,5 +142,8 @@ projectorIO.on('connection', function(socket) {
 		socket.on('comment request', function() {
 			screensIO.to(this).emit('comment request');
 		}.bind(pair));
+		socket.on('comment end', function() {
+			screensIO.to(this).emit('comment end');
+		}.bind(pair));
 	}
 });
