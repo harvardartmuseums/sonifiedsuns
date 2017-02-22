@@ -347,7 +347,9 @@ function resize() {
 function commentOff() {
 	if (commentCounter == 0) {
 		commenting = false;
-		comments.push[comment];
+		if (comment != "") {
+			comments.push[comment];
+		}
 		comment = "";
 		socket.emit('comment end');
 		commentCounter--;
