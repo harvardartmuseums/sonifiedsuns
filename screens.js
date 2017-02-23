@@ -34,7 +34,7 @@ var counter = 0; // number of 15s rounds so far
 var threshold = 25; // rounds before erasing sun
 var current = null; // current object
 var explanation = false; // explanation requested
-var commentReqeust = false;
+var commentRequest = false;
 var comments = [];
 var done = true;
 var stuck = 0;
@@ -537,7 +537,7 @@ socket.on('explain request', function() {
 });
 
 socket.on('comment request', function(comments) {
-	readComments = true;
+	commentRequest = true;
 	comments = comments;
 });
 
