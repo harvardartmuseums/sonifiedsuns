@@ -34,7 +34,7 @@ var counter = 0; // number of 15s rounds so far
 var threshold = 25; // rounds before erasing sun
 var current = null; // current object
 var explanation = false; // explanation requested
-var readComments = false;
+var commentReqeust = false;
 var comments = [];
 var done = true;
 var stuck = 0;
@@ -504,10 +504,10 @@ function doWork() {
 			explanation = false;
 
 		// upon request, read selection of comments
-		} else if (readComments == true) {
+		} else if (commentRequest == true) {
 			readComments();
 
-			readComments == false;
+			commentRequest == false;
 
 		// mention explanation
 		} else if (counter%explanationFrequence == 0) {
