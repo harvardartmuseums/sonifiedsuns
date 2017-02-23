@@ -180,6 +180,7 @@ var shade = 4;
 var recognition = new webkitSpeechRecognition();
 var commenting = false;
 var commentCounter = -1;
+var fullComment = 50;
 var comments = [];
 var displayComments = ["No comments recorded yet", "", "", "", ""];
 var comment = "";
@@ -188,7 +189,8 @@ setInterval(commentOff, 1000);
 
 socket.on('commenting', function() {
 	commenting = true;
-	commentCounter = 5;
+	commentCounter = 10;
+	fullMinute -= commentCounter;
 });
 
 socket.on('too many sockets', function() {
@@ -309,7 +311,10 @@ function setup(){
 		if (commenting) {
 			comment += currentSpeech;
 			alert(comment);
-			commentCounter = 5;
+			if (fullMinute > 0) {
+				commentCounter = 10;
+				fullMinute -= commentCounter;
+			} 
 		} else {
 			if ((currentSpeech.indexOf("explain") != -1) ||
 				(currentSpeech.indexOf("explanation") != -1)) {
@@ -350,8 +355,8 @@ function commentOff() {
 		commenting = false;
 		if (comment != "") {
 			comments.push[comment];
+			comment = "";
 		}
-		comment = "";
 		socket.emit('comment end');
 		commentCounter--;
 	} else if (commentCounter > 0) {
