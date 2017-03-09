@@ -205,7 +205,8 @@ socket.on('timed out', function() {
 function resampleComments(list) {
 	var index;
 	displayComments = [];
-	for (i = 0; i < Math.min(list.length, 5); i++) {
+	var commentLength = Math.min(list.length, 5);
+	for (i = 0; i < commentLength; i++) {
 		index = Math.floor(Math.random()*list.length);
 		displayComments.push(list[index]);
 		document.getElementById("comment" + i).innerHTML = list[index];
