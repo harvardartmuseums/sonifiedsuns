@@ -33,26 +33,31 @@
 	}
 
 	#comment0 {
+		text-align: right;
 		top: 3%;
 		left: 50%;
 	}
 
 	#comment1 {
+		text-align: left;
 		bottom: 1%;
 		left: 0%;
 	}
 
 	#comment2 {
+		text-align: right;
 		bottom: 3%;
 		left: 25%;
 	}
 
 	#comment3 {
+		text-align: right;
 		top: 0%;
 		left: 0%;
 	}
 
 	#comment4 {
+		text-align: left;
 		top: 5%;
 		right: 0%;
 	}
@@ -205,16 +210,11 @@ socket.on('timed out', function() {
 function resampleComments(list) {
 	var index;
 	displayComments = [];
-	var commentLength = Math.min(list.length, 5);
-	for (i = 0; i < commentLength; i++) {
+	for (i = 0; i < 5; i++) {
 		index = Math.floor(Math.random()*list.length);
 		displayComments.push(list[index]);
 		document.getElementById("comment" + i).innerHTML = list[index];
 		list.splice(index, 1);
-	}
-	for (i = i; i < 5; i++) {
-		displayComments.push("");
-		document.getElementById("comment" + i).innerHTML = "";
 	}	
 }
 
