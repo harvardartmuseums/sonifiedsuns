@@ -181,8 +181,8 @@ var recognition = new webkitSpeechRecognition();
 var commenting = false;
 var commentCounter = -1;
 var fullComment = 50;
-var comments = [];
-var displayComments = ["No comments recorded yet", "", "", "", ""];
+var comments = ["No comments recorded yet", "", "", "", ""];
+var displayComments = [];
 var comment = "";
 
 setInterval(commentOff, 1000);
@@ -310,7 +310,6 @@ function setup(){
 
 		if (commenting) {
 			comment += currentSpeech;
-			alert(comment);
 			if (fullComment > 0) {
 				commentCounter += 10;
 				fullComment -= commentCounter;
@@ -354,6 +353,11 @@ function commentOff() {
 	if (commentCounter == 0) {
 		commenting = false;
 		if (comment != "") {
+			if (comments[0] == "No comments recorded yet") {
+				comments.shift();
+			} else if (comments[0] == "") {
+				comments.shift();
+			}
 			comments.push[comment];
 			comment = "";
 		}
