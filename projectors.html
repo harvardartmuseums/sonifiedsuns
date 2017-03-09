@@ -235,7 +235,7 @@ socket.on('new image', function(url) {
 		document.getElementById("c" + shade).style.display = "none";
 		document.getElementById("n" + shade).style.display = "none";
 
-		resampleComments(comments);
+		resampleComments(comments.slice());
 });
 
 // if there's a new image that must
@@ -254,7 +254,7 @@ socket.on('small image', function(url) {
 		document.getElementById("c" + shade).style.display = "none";
 		document.getElementById("n" + shade).style.display = "none";
 
-		resampleComments(comments);
+		resampleComments(comments.slice());
 });
 
 // if there's no image, display
@@ -272,7 +272,7 @@ socket.on('no image', function() {
 		document.getElementById("c" + shade).style.display = "none";
 		document.getElementById("n" + shade).style.display = "block";
 
-		resampleComments(comments);
+		resampleComments(comments.slice());
 });
 
 // if no image can be displayed
@@ -291,7 +291,7 @@ socket.on('copyright', function() {
 		document.getElementById("c" + shade).style.display = "block";
 		document.getElementById("n" + shade).style.display = "none";
 
-		resampleComments(comments);
+		resampleComments(comments.slice());
 });
 
 setup();
