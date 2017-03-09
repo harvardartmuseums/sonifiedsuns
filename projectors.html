@@ -179,8 +179,8 @@ var socket = io('/projectors-namespace'); // to listen for image change
 var shade = 4;
 var recognition = new webkitSpeechRecognition();
 var commenting = false;
-var commentCounter = -1;
-var fullComment = 50;
+var speaking = false;
+var speechCounter = 10;
 var comments = ["No comments recorded yet", "", "", "", ""];
 var displayComments = [];
 var comment = "";
@@ -188,9 +188,8 @@ var comment = "";
 setInterval(commentOff, 1000);
 
 socket.on('commenting', function() {
+	speechCounter = 10;
 	commenting = true;
-	commentCounter = 10;
-	fullComment -= commentCounter;
 });
 
 socket.on('too many sockets', function() {
@@ -301,6 +300,17 @@ function setup(){
 	// set up speech recognition
 	recognition.continuous = true;
 	recognition.lang = "en-US";
+	recognition.onsoundstart = function(event) {
+		if (commenting) {
+			speaking = true;
+			speechCounter = 10;
+		}
+	};
+	recognition.onsoundend = function(event) {
+		if (commenting) {
+			speaking = false;
+		}
+	};
 	recognition.onresult = function(event) {
 		var currentSpeech = "";
 
@@ -310,10 +320,6 @@ function setup(){
 
 		if (commenting) {
 			comment += currentSpeech;
-			if (fullComment > 0) {
-				commentCounter += 10;
-				fullComment -= commentCounter;
-			} 
 		} else {
 			if ((currentSpeech.indexOf("explain") != -1) ||
 				(currentSpeech.indexOf("explanation") != -1)) {
@@ -350,21 +356,22 @@ function resize() {
 };
 
 function commentOff() {
-	if (commentCounter == 0) {
-		commenting = false;
-		if (comment != "") {
-			if (comments[0] == "No comments recorded yet") {
-				comments.shift();
-			} else if (comments[0] == "") {
-				comments.shift();
+	if (commenting && !speaking) {
+		if (speechCounter == 0) {
+			commenting = false;
+			if (comment != "") {
+				if (comments[0] == "No comments recorded yet") {
+					comments.shift();
+				} else if (comments[0] == "") {
+					comments.shift();
+				}
+				comments.push[comment];
+				comment = "";
 			}
-			comments.push[comment];
-			comment = "";
+			socket.emit('comment end');
+		} else {
+			speechCounter--;
 		}
-		socket.emit('comment end');
-		commentCounter--;
-	} else if (commentCounter > 0) {
-		commentCounter--;
 	}
 }
 
