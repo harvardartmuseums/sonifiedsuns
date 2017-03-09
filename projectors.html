@@ -209,6 +209,7 @@ function resampleComments(list) {
 		index = Math.floor(Math.random()*list.length);
 		displayComments.push(list[index]);
 		document.getElementById("comment" + i).innerHTML = list[index];
+		alert(list[index]);
 		list.splice(index, 1);
 	}
 	for (i = i; i < 5; i++) {
@@ -216,6 +217,7 @@ function resampleComments(list) {
 		document.getElementById("comment" + i).innerHTML = "";
 	}	
 }
+
 
 // if there's a new image that can be
 // displayed full screen, load it and
