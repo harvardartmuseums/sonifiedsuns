@@ -494,6 +494,7 @@ function doWork() {
 
 	if (date.getHours() >= startTime && date.getHours() < endTime) {
 		eraseColors();
+		synthesis.cancel();
 
 		// upon request, give description of project
 		if (explanation == true) {
