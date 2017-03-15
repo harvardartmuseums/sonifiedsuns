@@ -184,17 +184,18 @@ var socket = io('/projectors-namespace'); // to listen for image change
 var shade = 4;
 var recognition = new webkitSpeechRecognition();
 var commenting = false;
-var speaking = false;
+var commentEnder = undefined;
+var commentFinalEnder = undefined;
 var speechCounter = 10;
 var comments = ["No comments recorded yet", "", "", "", ""];
 var displayComments = [];
 var comment = "";
 
-setInterval(commentOff, 1000);
-
 socket.on('commenting', function() {
-	speechCounter = 10;
+	commentEnder = new setTimeout(commentOff, 10000);
+	commentFinalEnder = new setTimeout(commentTooLong, 90000);
 	commenting = true;
+	comment = "";
 });
 
 socket.on('too many sockets', function() {
@@ -303,14 +304,9 @@ function setup(){
 	recognition.continuous = true;
 	recognition.lang = "en-US";
 	recognition.onsoundstart = function(event) {
-		if (commenting) {
-			speaking = true;
-			speechCounter = 10;
-		}
-	};
-	recognition.onsoundend = function(event) {
-		if (commenting) {
-			speaking = false;
+		if (commenting && (commentEnder != undefined)) {
+                clearTimeout(commentEnder);
+                commentEnder = undefined;
 		}
 	};
 	recognition.onresult = function(event) {
@@ -322,6 +318,10 @@ function setup(){
 
 		if (commenting) {
 			comment += currentSpeech;
+                if (commentEnder != undefined) {
+                	clearTimeout(commentEnder);
+                }
+			commentEnder = new setTimeout(commentOff, 10000);
 		} else {
 			if ((currentSpeech.indexOf("explain") != -1) ||
 				(currentSpeech.indexOf("explanation") != -1)) {
@@ -358,23 +358,31 @@ function resize() {
 };
 
 function commentOff() {
-	if (commenting && !speaking) {
-		if (speechCounter == 0) {
-			commenting = false;
-			if (comment != "") {
-				if (comments[0] == "No comments recorded yet") {
-					comments.shift();
-				} else if (comments[0] == "") {
-					comments.shift();
-				}
-				comments.push[comment];
-				comment = "";
-			}
-			socket.emit('comment end');
-		} else {
-			speechCounter--;
+	clearTimeout(commentFinalEnder);
+	commentFinalEnder = undefined;
+	commentEnder = undefined;
+	commenting = false;
+	if (comment != "") {
+		if ((comments[0] == "") || (comments[0] == "No comments recorded yet")) {
+			comments.shift();
 		}
-	}
+		comments.push(comment);
+	} 
+	socket.emit('comment end');
+}
+
+function commentTooLong() {
+	clearTimeout(commentEnder);
+	commentFinalEnder = undefined;
+	commentEnder = undefined;
+	commenting = false;
+	if (comment != "") {
+		if ((comments[0] == "") || (comments[0] == "No comments recorded yet")) {
+			comments.shift();
+		}
+		comments.push(comment);
+	} 
+	socket.emit('comment end');
 }
 
 </script>
