@@ -192,8 +192,8 @@ var displayComments = [];
 var comment = "";
 
 socket.on('commenting', function() {
-	commentEnder = new setTimeout(commentOff, 10000);
-	commentFinalEnder = new setTimeout(commentTooLong, 90000);
+	commentEnder = setTimeout(commentOff, 10000);
+	commentFinalEnder = setTimeout(commentTooLong, 90000);
 	commenting = true;
 	comment = "";
 });
@@ -321,7 +321,7 @@ function setup(){
                 if (commentEnder != undefined) {
                 	clearTimeout(commentEnder);
                 }
-			commentEnder = new setTimeout(commentOff, 10000);
+			commentEnder = setTimeout(commentOff, 10000);
 		} else {
 			if ((currentSpeech.indexOf("explain") != -1) ||
 				(currentSpeech.indexOf("explanation") != -1)) {
