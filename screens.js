@@ -516,7 +516,7 @@ function doWork() {
 			counter++;
 
 		// solicit comment
-		} else if (counter%(explanationFrequence*2) == Math.floor(explanationFrequence/2)) {
+		} else if (counter%(explanationFrequence) == Math.floor(explanationFrequence/2)) {
 			synthesis.speak(c);
 			counter++;
 		} else {
