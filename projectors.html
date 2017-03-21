@@ -329,7 +329,7 @@ function setup(){
 			};
 
 			if (currentSpeech.indexOf("comment") != -1) {
-				resampleComments(comments.slice());
+				alert(displayComments.join(", "));
 				socket.emit('comment request', displayComments);
 			};
 		}
