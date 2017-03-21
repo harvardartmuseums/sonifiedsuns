@@ -537,9 +537,9 @@ socket.on('explain request', function() {
 	explanation = true;
 });
 
-socket.on('comment request', function(comments) {
+socket.on('comment request', function(commentSample) {
 	commentRequest = true;
-	comments = comments;
+	comments = commentSample;
 });
 
 socket.on('comment end', function() {

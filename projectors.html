@@ -329,6 +329,7 @@ function setup(){
 			};
 
 			if (currentSpeech.indexOf("comment") != -1) {
+				resampleComments(comments.slice());
 				socket.emit('comment request', displayComments);
 			};
 		}
