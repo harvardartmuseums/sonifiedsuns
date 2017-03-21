@@ -508,7 +508,7 @@ function doWork() {
 		} else if (commentRequest == true) {
 			readComments();
 
-			commentRequest == false;
+			commentRequest = false;
 
 		// mention explanation
 		} else if (counter%explanationFrequence == 0) {
@@ -527,10 +527,8 @@ function doWork() {
 }
 
 function readComments() {
-	for (var i = 0; i < comments.length; i++) {
-		commentReader.text = comments[i];
-		synthesis.speak(commentReader);
-	}
+	commentReader.text = comments.join(". ");
+	synthesis.speak(commentReader);
 }
 
 socket.on('explain request', function() {
