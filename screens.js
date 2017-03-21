@@ -251,7 +251,7 @@ for (var i = 0; i < 5; i++) {
 	commentReaders[i].lang = 'en-US';
 }
 
-commentReaders[i - 1].onend = function (event) {
+commentReaders[4].onend = function (event) {
 	setTimeout(doWork, transitionTimer * 1000);
 };
 
@@ -516,7 +516,7 @@ function doWork() {
 			counter++;
 
 		// solicit comment
-		} else if (counter%(explanationFrequence) == Math.floor(explanationFrequence/2)) {
+		} else if (counter%explanationFrequence == Math.floor(explanationFrequence/2)) {
 			synthesis.speak(c);
 			counter++;
 		} else {
@@ -527,8 +527,10 @@ function doWork() {
 }
 
 function readComments() {
-	commentReader.text = comments.join(". ");
-	synthesis.speak(commentReader);
+	for (i = 0; i < 5; i++) {
+		commentReaders[i].text = comments[i];
+		synthesis.speak(commentReaders[i]);
+	}
 }
 
 socket.on('explain request', function() {
