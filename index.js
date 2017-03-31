@@ -139,8 +139,8 @@ projectorIO.on('connection', function(socket) {
 		socket.on('explain request', function() {
 			screensIO.to(this).emit('explain request');
 		}.bind(pair));
-		socket.on('comment request', function() {
-			screensIO.to(this).emit('comment request');
+		socket.on('comment request', function(comments) {
+			screensIO.to(this).emit('comment request', comments);
 		}.bind(pair));
 		socket.on('comment end', function() {
 			screensIO.to(this).emit('comment end');

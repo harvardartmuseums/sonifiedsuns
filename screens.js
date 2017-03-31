@@ -526,13 +526,6 @@ function doWork() {
 	}
 }
 
-function readComments() {
-	for (i = 0; i < 5; i++) {
-		commentReaders[i].text = comments[i];
-		synthesis.speak(commentReaders[i]);
-	}
-}
-
 socket.on('explain request', function() {
 	explanation = true;
 });
@@ -556,6 +549,14 @@ socket.on('timed out', function() {
 	document.body.innerHTML = '';
 	alert("This attempt to connect timed out; please try again. Be sure to open an instance of http://sonifiedsuns.herokuapps.com/projectors.html within a minute of reloading this page.");
 });
+
+
+function readComments() {
+	for (var i = 0; i < 5; i++) {
+		commentReaders[i].text = comments[i];
+		synthesis.speak(commentReaders[i]);
+	}
+}
 
 // gets a random object with color and 
 // dimension data and visualizes/sonifies
