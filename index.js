@@ -168,6 +168,6 @@ projectorIO.on('connection', function(socket) {
 				text: text,
 				html: text
 			});
-		}
+		});
 	}
 });
