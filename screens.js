@@ -225,7 +225,7 @@ s.lang = 'en-US';
 explanationSpeech.push(s);
 
 s = new SpeechSynthesisUtterance(
-	"For an explanation of the tones, say explain. To hear a selection of comments from your fellow visitors, say comments."
+	"For an explanation of the tones, speak into the microphone on the stand in front of you and say explain. To hear a selection of comments from your fellow visitors, speak into the microphone on the stand in front of you and say comments."
 );
 s.onend = function (event) {
 	setTimeout(doWork, transitionTimer * 1000);
@@ -234,7 +234,7 @@ s.volume = speechVolume;
 s.lang = 'en-US';
 
 var c = new SpeechSynthesisUtterance(
-	"If you'd like to leave a comment, speak after the tone."
+	"If you'd like to leave a comment, speak speak into the microphone on the stand in front of you after the tone."
 );
 c.onend = function (event) {
 	socket.emit('commenting');
