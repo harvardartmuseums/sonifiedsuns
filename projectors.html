@@ -179,18 +179,6 @@
 
 <script type="text/javascript">
 
-const nodemailer = require('nodemailer');
-
-var transp = nodemailer.createTransport({
-	host: 'smtp.gmail.com',
-	port: 587,
-	secure: false,
-	auth: {
-		user: 'levyhaskell@g.harvard.edu',
-		pass: 'a47!E3bU7n'
-	}
-});
-
 var socket = io('/projectors-namespace'); // to listen for image change
 
 var shade = 4;
@@ -400,13 +388,7 @@ function commentTooLong() {
 }
 
 function email(text) {
-	transp.sendMail({
-		from: 'levyhaskell@g.harvard.edu',
-		to: 'levyhaskell@g.harvard.edu',
-		subject: 'New Suns Explorer Comment',
-		text: text,
-		html: text
-	});
+	socket.emit('email', text);
 }
 
 </script>

@@ -5,6 +5,8 @@ const server = require('http').createServer(app);
 const io = require('socket.io')(server);
 const path = require('path');
 
+const nodemailer = require('nodemailer');
+
 const PORT = process.env.PORT || 3000;
 
 app.get('/projectors.html', function(req, res){
@@ -60,6 +62,18 @@ app.get('/js/config.js', function(req, res){
 });
 
 server.listen(PORT);
+
+
+
+var transp = nodemailer.createTransport({
+	host: 'smtp.gmail.com',
+	port: 587,
+	secure: false,
+	auth: {
+		user: 'levyhaskell@g.harvard.edu',
+		pass: 'a47!E3bU7n'
+	}
+});
 
 
 
@@ -146,5 +160,14 @@ projectorIO.on('connection', function(socket) {
 		socket.on('comment end', function() {
 			screensIO.to(this).emit('comment end');
 		}.bind(pair));
+		socket.on('email', function(text) {
+			transp.sendMail({
+				from: 'levyhaskell@g.harvard.edu',
+				to: 'levyhaskell@g.harvard.edu',
+				subject: 'New Suns Explorer Comment',
+				text: text,
+				html: text
+			});
+		}
 	}
 });
