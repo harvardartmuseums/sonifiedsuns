@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "express": "4.14.0",
+    "nodemailer": "^4.0.1",
     "socket.io": "1.5.1"
   },
   "devDependencies": {},

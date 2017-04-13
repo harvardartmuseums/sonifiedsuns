@@ -62,6 +62,7 @@ app.get('/js/config.js', function(req, res){
 server.listen(PORT);
 
 
+
 var screensIO = io.of('/screens-namespace');
 var projectorIO = io.of('/projectors-namespace');
 var pairs = [];
