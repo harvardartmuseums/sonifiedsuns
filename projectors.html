@@ -140,34 +140,6 @@
 		No photograph has been taken of this object
 	</div>
 </div>
-
-<div id="i3" class="container">
-	<img class="photo" id="p3" src="" />
-
-	<img class="smallphoto" id="s3" src="" />
-
-	<div class="copyright" id="c3">
-		An image of this object cannot be displayed for copyright reasons
-	</div>
-
-	<div class="noimage" id="n3">
-		No photograph has been taken of this object
-	</div>
-</div>
-
-<div id="i4" class="container">
-	<img class="photo" id="p4" src="" />
-
-	<img class="smallphoto" id="s4" src="" />
-
-	<div class="copyright" id="c4">
-		An image of this object cannot be displayed for copyright reasons
-	</div>
-
-	<div class="noimage" id="n4">
-		No photograph has been taken of this object
-	</div>
-</div>
 </div>
 
 
@@ -181,7 +153,7 @@
 
 var socket = io('/projectors-namespace'); // to listen for image change
 
-var shade = 4;
+var shade = 2;
 var recognition = new webkitSpeechRecognition();
 var commenting = false;
 var commentEnder = undefined;
@@ -225,7 +197,7 @@ function resampleComments(list) {
 // hide all the other messages
 socket.on('new image', function(url) {
 		document.getElementById("images").appendChild(document.getElementById("images").firstElementChild);
-		if (shade < 4) {
+		if (shade < 2) {
 			shade++;
 		} else {
 			shade = 1;
@@ -244,7 +216,7 @@ socket.on('new image', function(url) {
 // hide all the other messages
 socket.on('small image', function(url) {
 		document.getElementById("images").appendChild(document.getElementById("images").firstElementChild);
-		if (shade < 4) {
+		if (shade < 2) {
 			shade++;
 		} else {
 			shade = 1;
@@ -263,7 +235,7 @@ socket.on('small image', function(url) {
 // the others
 socket.on('no image', function() {
 		document.getElementById("images").appendChild(document.getElementById("images").firstElementChild);
-		if (shade < 4) {
+		if (shade < 2) {
 			shade++;
 		} else {
 			shade = 1;
@@ -282,7 +254,7 @@ socket.on('no image', function() {
 // the others
 socket.on('copyright', function() {
 		document.getElementById("images").appendChild(document.getElementById("images").firstElementChild);
-		if (shade < 4) {
+		if (shade < 2) {
 			shade++;
 		} else {
 			shade = 1;
