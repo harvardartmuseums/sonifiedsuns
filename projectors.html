@@ -35,7 +35,7 @@
 	#comment0 {
 		text-align: right;
 		top: 3%;
-		left: 50%;
+		left: 25%;
 	}
 
 	#comment1 {
@@ -54,12 +54,6 @@
 		text-align: right;
 		top: 0%;
 		left: 0%;
-	}
-
-	#comment4 {
-		text-align: left;
-		top: 5%;
-		right: 0%;
 	}
 
 	.container {
@@ -109,7 +103,6 @@
 <div id="comment1" class="comment"></div>
 <div id="comment2" class="comment"></div>
 <div id="comment3" class="comment"></div>
-<div id="comment4" class="comment"></div>
 
 
 <div id="images">
@@ -159,7 +152,7 @@ var commenting = false;
 var commentEnder = undefined;
 var commentFinalEnder = undefined;
 var speechCounter = 10;
-var comments = ["No comments recorded yet", "", "", "", ""];
+var comments = ["No comments recorded yet", "", "", ""];
 var displayComments = [];
 var comment = "";
 
@@ -183,7 +176,7 @@ socket.on('timed out', function() {
 function resampleComments(list) {
 	var index;
 	displayComments = [];
-	for (i = 0; i < 5; i++) {
+	for (i = 0; i < 4; i++) {
 		index = Math.floor(Math.random()*list.length);
 		displayComments.push(list[index]);
 		document.getElementById("comment" + i).innerHTML = list[index];
@@ -321,7 +314,7 @@ window.onresize = function(event){
 
 // resize the elements to suit the window size
 function resize() {
-	for (var i = 1; i <= 4; i++) { 
+	for (var i = 1; i <= 2; i++) { 
 		document.getElementById("i" + i).style.width = window.innerWidth/4 + "px";
 		document.getElementById("i" + i).style.height = window.innerHeight + "px";
 	}
