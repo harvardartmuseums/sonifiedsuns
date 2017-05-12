@@ -70,8 +70,7 @@ var transp = nodemailer.createTransport({
 	port: 587,
 	secure: false,
 	auth: {
-		user: 'levyhaskell@g.harvard.edu',
-		pass: 'a47!E3bU7n'
+
 	}
 });
 
