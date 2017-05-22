@@ -90,6 +90,7 @@ var timeElapsed = 0;
 setInterval(testConnection, 10000);
 
 function testConnection() {
+	console.log("test connection, time elapsed " + timeElapsed);
 	if (timeElapsed >= 6) {
 		var trio = trios[trios.length - 1];
 		if (!trio.complete) {
@@ -109,10 +110,13 @@ function refuseScreens() {
 }
 
 screensIO.on('connection', function(socket) {
+	console.log("Screens connecting...");
 	if (trios.length == 0 || trios[trios.length - 1].complete) {
+		console.log("No object yet");
 		trios.push({screen: socket.id, projector: undefined, control: undefined, complete: false, id: (socket.id + "room")});
 		timeElapsed = 1;
 	} else if (trios[trios.length - 1].screen != undefined) {
+		console.log("Screens already connected");
 		setTimeout(refuseScreens.bind(socket.id), 20);
 		return;
 	} else {
@@ -125,6 +129,8 @@ screensIO.on('connection', function(socket) {
 
 	var id = trios[trios.length - 1].id;
 	socket.join(id);
+
+	console.log("Screen connected");
 
 	socket.on('new image', function(url) {
 		projectorIO.to(this).emit('new image', url);
@@ -154,10 +160,13 @@ function refuseProjector() {
 }
 
 projectorIO.on('connection', function(socket) {
+	console.log("Projectors connecting...");
 	if (trios.length == 0 || trios[trios.length - 1].complete) {
+		console.log("No object yet");
 		trios.push({screen: undefined, projector: socket.id, control: undefined, complete: false, id: (socket.id + "room")});
 		timeElapsed = 1;
 	} else if (trios[trios.length - 1].projector != undefined) {
+		console.log("Projector already connected");
 		setTimeout(refuseProjector.bind(socket.id), 20);
 		return;
 	} else {
@@ -171,6 +180,8 @@ projectorIO.on('connection', function(socket) {
 	var id = trios[trios.length - 1].id;
 	socket.join(id);
 
+	console.log("Projector connected");
+
 	socket.on('comment request', function(comments) {
 		screensIO.to(this).emit('comment request', comments);
 	}.bind(id));
@@ -181,10 +192,13 @@ function refuseControl() {
 }
 
 controlIO.on('connection', function(socket) {
+	console.log("Control connecting...");
 	if (trios.length == 0 || trios[trios.length - 1].complete) {
+		console.log("No object yet");
 		trios.push({screen: undefined, projector: undefined, control: socket.id, complete: false, id: (socket.id + "room")});
 		timeElapsed = 1;
 	} else if (trios[trios.length - 1].control != undefined) {
+		console.log("Control already connected");
 		setTimeout(refuseControl.bind(socket.id), 20);
 		return;
 	} else {
@@ -197,6 +211,8 @@ controlIO.on('connection', function(socket) {
 
 	var id = trios[trios.length - 1].id;
 	socket.join(id);
+
+	console.log("Control connected");
 
 	socket.on('explain request', function() {
 		screensIO.to(this).emit('explain request');
