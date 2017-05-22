@@ -87,7 +87,7 @@ var controlIO = io.of('/control-namespace');
 var trios = [];
 var timeElapsed = 0;
 
-//setInterval(testConnection, 10000);
+setInterval(testConnection, 10000);
 
 function testConnection() {
 	if (timeElapsed >= 6) {
@@ -200,14 +200,14 @@ controlIO.on('connection', function(socket) {
 
 	socket.on('explain request', function() {
 		screensIO.to(this).emit('explain request');
-	}.bind(pair));
+	}.bind(id));
 	socket.on('comment request', function() {
 		projectorIO.to(this).emit('comment request');
-	}.bind(pair));
+	}.bind(id));
 	socket.on('comment end', function(comments) {
 		screensIO.to(this).emit('comment end');
 		projectorIO.to(this).emit('new comments', comments);
-	}.bind(pair));
+	}.bind(id));
 	socket.on('email', function(text) {
 		transp.sendMail({
 			from: 'levyhaskell@g.harvard.edu',
