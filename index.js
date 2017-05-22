@@ -110,7 +110,7 @@ function refuseScreens() {
 
 screensIO.on('connection', function(socket) {
 	if (trios.length == 0 || trios[trios.length - 1].complete) {
-		trios.push({screen: socket.id, projector: undefined, control: undefined, complete: false, id: socket.id + "room"});
+		trios.push({screen: socket.id, projector: undefined, control: undefined, complete: false, id: (socket.id + "room")});
 		timeElapsed = 1;
 	} else if (trios[trios.length - 1].screen != undefined) {
 		setTimeout(refuseScreens.bind(socket.id), 20);
@@ -155,7 +155,7 @@ function refuseProjector() {
 
 projectorIO.on('connection', function(socket) {
 	if (trios.length == 0 || trios[trios.length - 1].complete) {
-		trios.push({screen: undefined, projector: socket.id, control: undefined, complete: false, id: socket.id + "room"});
+		trios.push({screen: undefined, projector: socket.id, control: undefined, complete: false, id: (socket.id + "room")});
 		timeElapsed = 1;
 	} else if (trios[trios.length - 1].projector != undefined) {
 		setTimeout(refuseProjector.bind(socket.id), 20);
@@ -182,7 +182,7 @@ function refuseControl() {
 
 controlIO.on('connection', function(socket) {
 	if (trios.length == 0 || trios[trios.length - 1].complete) {
-		trios.push({screen: undefined, projector: undefined, control: socket.id, complete: false, id: socket.id + "room"});
+		trios.push({screen: undefined, projector: undefined, control: socket.id, complete: false, id: (socket.id + "room")});
 		timeElapsed = 1;
 	} else if (trios[trios.length - 1].control != undefined) {
 		setTimeout(refuseControl.bind(socket.id), 20);
