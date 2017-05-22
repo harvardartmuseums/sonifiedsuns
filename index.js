@@ -122,7 +122,7 @@ screensIO.on('connection', function(socket) {
 			trio.complete = true;
 		}
 	}
-	
+
 	var id = trios[trios.length - 1].id;
 	socket.join(id);
 
@@ -168,12 +168,12 @@ projectorIO.on('connection', function(socket) {
 		}
 	}
 
+	var id = trios[trios.length - 1].id;
+	socket.join(id);
+
 	socket.on('comment request', function(comments) {
 		screensIO.to(this).emit('comment request', comments);
 	}.bind(id));
-
-	var id = trios[trios.length - 1].id;
-	socket.join(id);
 });
 
 function refuseControl() {
