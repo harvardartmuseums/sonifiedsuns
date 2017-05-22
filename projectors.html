@@ -149,21 +149,9 @@
 var socket = io('/projectors-namespace'); // to listen for image change
 
 var shade = 2;
-var recognition = new webkitSpeechRecognition();
-var commenting = false;
-var commentEnder = undefined;
-var commentFinalEnder = undefined;
-var speechCounter = 10;
 var comments = ["No comments recorded yet", "", "", ""];
 var displayComments = [];
-var comment = "";
 
-socket.on('commenting', function() {
-	commentEnder = setTimeout(commentOff, 10000);
-	commentFinalEnder = setTimeout(commentTooLong, 90000);
-	commenting = true;
-	comment = "";
-});
 
 socket.on('too many sockets', function() {
 	document.body.innerHTML = '';
@@ -172,7 +160,7 @@ socket.on('too many sockets', function() {
 
 socket.on('timed out', function() {
 	document.body.innerHTML = '';
-	alert("This attempt to connect timed out; please try again. Be sure to open an instance of http://sonifiedsuns.herokuapps.com/screens.html within a minute of reloading this page.");
+	alert("This attempt to connect timed out; please try again. Be sure to open an instance of http://sonifiedsuns.herokuapps.com/screens.html and an instance of http://sonifiedsuns.herokuapps.com/control.html within a minute of reloading this page.");
 });
 
 function resampleComments(list) {
@@ -186,6 +174,13 @@ function resampleComments(list) {
 	}	
 }
 
+socket.on('comment request', function() {
+	socket.emit('comment request', displayComments);
+});
+
+socket.on('new comments', function(newComments) {
+	comments = newComments;
+});
 
 // if there's a new image that can be
 // displayed full screen, load it and
@@ -262,53 +257,7 @@ socket.on('copyright', function() {
 		resampleComments(comments.slice());
 });
 
-setup();
-
-function setup(){
-	resize();
-
-	// set up speech recognition
-	//recognition.continuous = true;
-	recognition.lang = "en-US";
-	recognition.onsoundstart = function(event) {
-		if (commenting && (commentEnder != undefined)) {
-                clearTimeout(commentEnder);
-                commentEnder = undefined;
-		}
-	};
-	recognition.onresult = function(event) {
-		var currentSpeech = "";
-
-		for (var i = event.resultIndex; i < event.results.length; i++) {
-			currentSpeech += " " + event.results[i][0].transcript;
-		};
-
-		if (commenting) {
-			comment += currentSpeech;
-                if (commentEnder != undefined) {
-                	clearTimeout(commentEnder);
-                }
-			commentEnder = setTimeout(commentOff, 10000);
-		} else {
-			if ((currentSpeech.indexOf("explain") != -1) ||
-				(currentSpeech.indexOf("explanation") != -1)) {
-				socket.emit('explain request');
-			};
-
-			if (currentSpeech.indexOf("comment") != -1) {
-				socket.emit('comment request', displayComments);
-			};
-		}
-
-		i = null;
-		event = null;
-		currentSpeech = null;
-	};
-	recognition.onend = function(event) {
-		recognition.start();
-	};
-	recognition.start();
-}
+resize();
 
 window.onresize = function(event){
 	resize();
@@ -323,40 +272,6 @@ function resize() {
 	document.getElementById("instructions").style.width = window.innerWidth + "px";
 	document.getElementById("instructions").style.top = window.innerHeight - 20 + "px";
 };
-
-function commentOff() {
-	clearTimeout(commentFinalEnder);
-	commentFinalEnder = undefined;
-	commentEnder = undefined;
-	commenting = false;
-	if (comment != "") {
-		if ((comments[0] == "") || (comments[0] == "No comments recorded yet")) {
-			comments.shift();
-		}
-		comments.push(comment);
-		email(comment);
-	} 
-	socket.emit('comment end');
-}
-
-function commentTooLong() {
-	clearTimeout(commentEnder);
-	commentFinalEnder = undefined;
-	commentEnder = undefined;
-	commenting = false;
-	if (comment != "") {
-		if ((comments[0] == "") || (comments[0] == "No comments recorded yet")) {
-			comments.shift();
-		}
-		comments.push(comment);
-		email(comment);
-	} 
-	socket.emit('comment end');
-}
-
-function email(text) {
-	socket.emit('email', text);
-}
 
 </script>
 

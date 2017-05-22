@@ -225,7 +225,7 @@ s.lang = 'en-US';
 explanationSpeech.push(s);
 
 s = new SpeechSynthesisUtterance(
-	"To use the voice controls, speak into the microphone on the stand in front of you. For an explanation of the tones, say explain. To hear a selection of comments from your fellow visitors, say comments."
+	"To use the voice controls, speak into the iPad on the stand in front of you. For an explanation of the tones, say explain. To hear a selection of comments from your fellow visitors, say comments."
 );
 s.onend = function (event) {
 	setTimeout(doWork, transitionTimer * 1000);
@@ -234,10 +234,11 @@ s.volume = speechVolume;
 s.lang = 'en-US';
 
 var c = new SpeechSynthesisUtterance(
-	"If you'd like to leave a comment, speak into the microphone on the stand in front of you after the tone."
+	"If you'd like to leave a comment, speak into the iPad on the stand in front of you after the tone."
 );
 c.onend = function (event) {
 	socket.emit('commenting');
+	socket.emit('message', 'Record a comment by speaking into this iPad now.');
 	playTone(exampleNote, 1, 1, 0);
 };
 c.volume = speechVolume;
@@ -493,11 +494,15 @@ function doWork() {
 	stuck = 0;
 
 	if (date.getHours() >= startTime && date.getHours() < endTime) {
+		socket.emit('close message');
 		eraseColors();
 		synthesis.cancel();
 
 		// upon request, give description of project
 		if (explanation == true) {
+
+			socket.emit('message', 'The tones you hear relate to the colors of the object being described.<br /><br />Low notes are colors at the beginning of the rainbow, like <font color="red">red</font> and <font color="orange">orange</font>.<br />High notes are colors at the end of the rainbow, like <font color="blue">blue</font> and <font color="purple">purple</font>.<br /><br />Notes that play sooner represent more of the object's color.<br /><br /><font size="90%">Small sounds are small objects.</font><br /><font size="110%">Big sounds are big objects.</font><br /><br /><font color="blue">Louder sounds are brighter colors.</font><br /><font color="greyblue">Softer sounds are duller colors.</font>');
+
 			for (var i = 0; i < explanationSpeech.length; i++) {
 				synthesis.speak(explanationSpeech[i]);
 			}
@@ -547,7 +552,7 @@ socket.on('too many sockets', function() {
 
 socket.on('timed out', function() {
 	document.body.innerHTML = '';
-	alert("This attempt to connect timed out; please try again. Be sure to open an instance of http://sonifiedsuns.herokuapps.com/projectors.html within a minute of reloading this page.");
+	alert("This attempt to connect timed out; please try again. Be sure to open an instance of http://sonifiedsuns.herokuapps.com/projectors.html and an instance of http://sonifiedsuns.herokuapps.com/control.html within a minute of reloading this page.");
 });
 
 
