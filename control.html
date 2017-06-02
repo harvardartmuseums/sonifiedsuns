@@ -15,7 +15,7 @@
 		margin: 0px;  
 		overflow: hidden; 
 		background: #000000;
-		font-size: 2vw;
+		font-size: 4vw;
 		color: #FFFFFF;
 		font-family: 'Inconsolata', Monaco, monospace;
 	}
@@ -108,7 +108,7 @@ function clickComments() {
 	setTimeout(unclickComments, 1000);
 }
 
-function readComments() {
+function comments() {
 	socket.emit('comment request');
 	clickComments();
 }
