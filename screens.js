@@ -500,7 +500,7 @@ function doWork() {
 
 		// upon request, give description of project
 		if (explanation == true) {
-			socket.emit('message', 'The tones you hear relate to the colors of the object being described.<br /><br />Low notes are colors at the beginning of the rainbow, like <font color="red">red</font> and <font color="orange">orange</font>.<br />High notes are colors at the end of the rainbow, like <font color="blue">blue</font> and <font color="purple">purple</font>.<br /><br />Notes that play sooner represent more of the object\'s color.<br /><br /><font size="80%">Small sounds are small objects.</font><br /><font size="120%">Big sounds are big objects.</font><br /><br /><font color="#00b300">Louder sounds are brighter colors.</font><br /><font color="#3e743e">Softer sounds are duller colors.</font>');
+			socket.emit('message', 'The tones you hear relate to the colors of the object being described.<br /><br /><br /><br />Low notes are colors at the beginning of the rainbow, like <font color="red">red</font> and <font color="orange">orange</font>.<br /><br />High notes are colors at the end of the rainbow, like <font color="blue">blue</font> and <font color="purple">purple</font>.<br /><br /><br /><br />Notes that play sooner represent more of the object\'s color.<br /><br /><br /><br /><span style="font-size: 80%">Small sounds are small objects.</span><br /><br /><span style="font-size: 120%">Big sounds are big objects.</span><br /><br /><br /><br /><font color="#00b300">Louder sounds are brighter colors.</font><br /><br /><font color="#3e743e">Softer sounds are duller colors.</font>');
 
 			for (var i = 0; i < explanationSpeech.length; i++) {
 				synthesis.speak(explanationSpeech[i]);

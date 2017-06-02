@@ -143,6 +143,9 @@ screensIO.on('connection', function(socket) {
 	socket.on('message', function(text) {
 		controlIO.to(this).emit('message', text);
 	}.bind(id));
+	socket.on('close message', function() {
+		controlIO.to(this).emit('close message');
+	}.bind(id));
 });
 
 function refuseProjector() {
