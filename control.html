@@ -6,11 +6,6 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<meta name="apple-mobile-web-app-capable" content="yes" /> 
-<meta name="apple-touch-fullscreen" content="yes" />
-<meta name="apple-mobile-web-app-status-bar-style" content="black">
-<meta name="mobile-web-app-capable" content="yes">
-
 <title>Sonified Suns Control App</title>
 
 <style>
@@ -30,8 +25,8 @@
 		position: absolute;
 		top: 0px;
 		left: 0px;
-		width: 100%;
-		height: 100%;
+		width: 100vw;
+		height: 100vh;
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -176,7 +171,7 @@ function commentOff() {
 	commentFinalEnder = undefined;
 	commentEnder = undefined;
 	commenting = false;
-	if (comment != "") {
+	if (comment) {
 		if ((comments[0] == "") || (comments[0] == "No comments recorded yet")) {
 			comments.shift();
 		}
@@ -192,7 +187,7 @@ function commentTooLong() {
 	commentFinalEnder = undefined;
 	commentEnder = undefined;
 	commenting = false;
-	if (comment != "") {
+	if (comment) {
 		if ((comments[0] == "") || (comments[0] == "No comments recorded yet")) {
 			comments.shift();
 		}

@@ -290,6 +290,7 @@ function chooseVoice() {
 				commentReaders[j].voice = voices[i];
 			}
 			s.voice = voices[i];
+			c.voice = voices[i];
 
 		// British English
 		} else if (voices[i].name == "Google UK English Female") {
