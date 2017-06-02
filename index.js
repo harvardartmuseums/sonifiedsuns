@@ -118,7 +118,9 @@ screensIO.on('connection', function(socket) {
 	} else {
 		var trio = trios[trios.length - 1];
 		trio.screen = socket.id;
-		trio.complete = true;
+		if (trio.projector != undefined) {
+			trio.complete = true;
+		}
 	}
 
 	var id = trios[trios.length - 1].id;
@@ -162,7 +164,9 @@ projectorIO.on('connection', function(socket) {
 	} else {
 		var trio = trios[trios.length - 1];
 		trio.projector = socket.id;
-		trio.complete = true;
+		if (trio.screen != undefined) {
+			trio.complete = true;
+		}
 	}
 
 	var id = trios[trios.length - 1].id;
