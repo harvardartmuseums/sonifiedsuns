@@ -83,7 +83,7 @@ var transp = nodemailer.createTransport({
 
 var screensIO = io.of('/screens-namespace');
 var projectorIO = io.of('/projectors-namespace');
-var controlIO = io.of('/control-namespace');
+//var controlIO = io.of('/control-namespace');
 var trios = [];
 var timeElapsed = 0;
 
@@ -95,7 +95,7 @@ function testConnection() {
 		if (!trio.complete) {
 			screensIO.to(trio.screen).emit('timed out');
 			projectorIO.to(trio.projector).emit('timed out');
-			controlIO.to(trio.control).emit('timed out');
+			//controlIO.to(trio.control).emit('timed out');
 			trios.pop();
 		}
 		timeElapsed = 0;
@@ -110,7 +110,7 @@ function refuseScreens() {
 
 screensIO.on('connection', function(socket) {
 	if (trios.length == 0 || trios[trios.length - 1].complete) {
-		trios.push({screen: socket.id, projector: undefined, control: undefined, complete: false, id: (socket.id + "room")});
+		trios.push({screen: socket.id, projector: undefined, complete: false, id: (socket.id + "room")});
 		timeElapsed = 1;
 	} else if (trios[trios.length - 1].screen != undefined) {
 		setTimeout(refuseScreens.bind(socket.id), 20);
@@ -138,11 +138,11 @@ screensIO.on('connection', function(socket) {
 	}.bind(id));
 	socket.on('commenting', function() {
 		projectorIO.to(this).emit('commenting');
-		controlIO.to(this).emit('message', 'Record a comment by speaking into the microphone now.');
+		//controlIO.to(this).emit('message', 'Record a comment by speaking into the microphone now.');
 	}.bind(id));
-	socket.on('message', function(text) {
-		controlIO.to(this).emit('message', text);
-	}.bind(id));
+	//socket.on('message', function(text) {
+		//controlIO.to(this).emit('message', text);
+	//}.bind(id));
 });
 
 function refuseProjector() {
@@ -151,7 +151,7 @@ function refuseProjector() {
 
 projectorIO.on('connection', function(socket) {
 	if (trios.length == 0 || trios[trios.length - 1].complete) {
-		trios.push({screen: undefined, projector: socket.id, control: undefined, complete: false, id: (socket.id + "room")});
+		trios.push({screen: undefined, projector: socket.id, complete: false, id: (socket.id + "room")});
 		timeElapsed = 1;
 	} else if (trios[trios.length - 1].projector != undefined) {
 		setTimeout(refuseProjector.bind(socket.id), 20);
@@ -167,15 +167,15 @@ projectorIO.on('connection', function(socket) {
 
 	socket.on('explain request', function() {
 		screensIO.to(this).emit('explain request');
-		controlIO.to(this).emit('explain request');
+		//controlIO.to(this).emit('explain request');
 	}.bind(id));
 	socket.on('comment request', function(comments) {
 		screensIO.to(this).emit('comment request', comments);
-		controlIO.to(this).emit('comment request');
+		//controlIO.to(this).emit('comment request');
 	}.bind(id));
 	socket.on('comment end', function() {
 		screensIO.to(this).emit('comment end');
-		controlIO.to(this).emit('close message');
+		//controlIO.to(this).emit('close message');
 	}.bind(id));
 	socket.on('email', function(text) {
 		transp.sendMail({
@@ -190,7 +190,7 @@ projectorIO.on('connection', function(socket) {
 function refuseControl() {
 	controlIO.to(this).emit('too many sockets');
 }
-
+/*
 controlIO.on('connection', function(socket) {
 	if (trios.length == 0 || (trios[trios.length - 1].complete && trios[trios.length - 1].control != undefined)) {
 		trios.push({screen: undefined, projector: undefined, control: socket.id, complete: false, id: (socket.id + "room")});
@@ -213,3 +213,4 @@ controlIO.on('connection', function(socket) {
 		screensIO.to(this).emit('comment request');
 	}.bind(id));
 });
+*/
