@@ -219,6 +219,7 @@ s.onstart = function (event) {
 	playTone(exampleNote, .2, exampleRoom, 0);
 };
 s.onend = function (event) {
+	socket.emit('close message');
 	setTimeout(doWork, transitionTimer * 1000);
 };
 s.lang = 'en-US';
@@ -498,6 +499,8 @@ function doWork() {
 
 		// upon request, give description of project
 		if (explanation == true) {
+			socket.emit('message', 'The tones you hear relate to the colors of the object being described.<br /><br />Low notes are colors at the beginning of the rainbow, like <font color="red">red</font> and <font color="orange">orange</font>.<br />High notes are colors at the end of the rainbow, like <font color="blue">blue</font> and <font color="purple">purple</font>.<br /><br />Notes that play sooner represent more of the object\'s color.<br /><br /><font size="18px">Small sounds are small objects.</font><br /><font size="22px">Big sounds are big objects.</font><br /><br /><font color="#00b300">Louder sounds are brighter colors.</font><br /><font color="#3e743e">Softer sounds are duller colors.</font>');
+
 			for (var i = 0; i < explanationSpeech.length; i++) {
 				synthesis.speak(explanationSpeech[i]);
 			}
@@ -788,10 +791,12 @@ function getSize(dimensions) {
 
 function restart() {
 	if ((synthesis.speaking == false) && (done == true)) {
+		socket.emit('close message');
 		doWork();
 	} else if (stuck < 6) {
 		stuck++;
 	} else {
+		socket.emit('close message');
 		doWork();
 	}
 }

@@ -17,6 +17,10 @@ app.get('/screens.html', function(req, res){
 	res.sendFile(path.join(__dirname, '/screens.html'));
 });
 
+app.get('/control.html', function(req, res) {
+	res.sendFile(path.join(__dirname, '/control.html'));
+});
+
 app.get('/screens.js', function(req, res){
 	res.sendFile(path.join(__dirname, '/screens.js'));
 });
@@ -78,18 +82,19 @@ var transp = nodemailer.createTransport({
 
 var screensIO = io.of('/screens-namespace');
 var projectorIO = io.of('/projectors-namespace');
-var pairs = [];
+var controlIO = io.of('/control-namespace');
+var trios = [];
 var timeElapsed = 0;
 
 setInterval(testConnection, 10000);
 
 function testConnection() {
 	if (timeElapsed >= 6) {
-		var pair = pairs[pairs.length - 1];
-		if (!pair.complete) {
-			screensIO.to(pair.screen).emit('timed out');
-			projectorIO.to(pair.projector).emit('timed out');
-			pairs.pop();
+		var trio = trios[trios.length - 1];
+		if (!trio.complete) {
+			screensIO.to(trio.screen).emit('timed out');
+			projectorIO.to(trio.projector).emit('timed out');
+			trios.pop();
 		}
 		timeElapsed = 0;
 	} else if (timeElapsed != 0) {
@@ -102,19 +107,19 @@ function refuseScreens() {
 }
 
 screensIO.on('connection', function(socket) {
-	if (pairs.length == 0 || pairs[pairs.length - 1].complete) {
-		pairs.push({screen: socket.id, projector: undefined, complete: false, id: (socket.id + "room")});
+	if (trios.length == 0 || trios[trios.length - 1].complete) {
+		trios.push({screen: socket.id, projector: undefined, control: undefined, complete: false, id: (socket.id + "room")});
 		timeElapsed = 1;
-	} else if (pairs[pairs.length - 1].screen != undefined) {
+	} else if (trios[trios.length - 1].screen != undefined) {
 		setTimeout(refuseScreens.bind(socket.id), 20);
 		return;
 	} else {
-		var pair = pairs[pairs.length - 1];
-		pair.screen = socket.id;
-		pair.complete = true;
+		var trio = trios[trios.length - 1];
+		trio.screen = socket.id;
+		trio.complete = true;
 	}
 
-	var id = pairs[pairs.length - 1].id;
+	var id = trios[trios.length - 1].id;
 	socket.join(id);
 
 	socket.on('new image', function(url) {
@@ -131,6 +136,10 @@ screensIO.on('connection', function(socket) {
 	}.bind(id));
 	socket.on('commenting', function() {
 		projectorIO.to(this).emit('commenting');
+		controlIO.to(this).emit('message', 'Record a comment by speaking into the microphone now.');
+	}.bind(id));
+	socket.on('message', function(text) {
+		controlIO.to(this).emit('message', text);
 	}.bind(id));
 });
 
@@ -139,29 +148,32 @@ function refuseProjector() {
 }
 
 projectorIO.on('connection', function(socket) {
-	if (pairs.length == 0 || pairs[pairs.length - 1].complete) {
-		pairs.push({screen: undefined, projector: socket.id, complete: false, id: (socket.id + "room")});
+	if (trios.length == 0 || trios[trios.length - 1].complete) {
+		trios.push({screen: undefined, projector: socket.id, control: undefined, complete: false, id: (socket.id + "room")});
 		timeElapsed = 1;
-	} else if (pairs[pairs.length - 1].projector != undefined) {
+	} else if (trios[trios.length - 1].projector != undefined) {
 		setTimeout(refuseProjector.bind(socket.id), 20);
 		return;
 	} else {
-		var pair = pairs[pairs.length - 1];
-		pair.projector = socket.id;
-		pair.complete = true;
+		var trio = trios[trios.length - 1];
+		trio.projector = socket.id;
+		trio.complete = true;
 	}
 
-	var id = pairs[pairs.length - 1].id;
+	var id = trios[trios.length - 1].id;
 	socket.join(id);
 
 	socket.on('explain request', function() {
 		screensIO.to(this).emit('explain request');
+		controlIO.to(this).emit('explain request');
 	}.bind(id));
 	socket.on('comment request', function(comments) {
 		screensIO.to(this).emit('comment request', comments);
+		controlIO.to(this).emit('comment request');
 	}.bind(id));
 	socket.on('comment end', function() {
 		screensIO.to(this).emit('comment end');
+		controlIO.to(this).emit('close message');
 	}.bind(id));
 	socket.on('email', function(text) {
 		transp.sendMail({
@@ -172,4 +184,30 @@ projectorIO.on('connection', function(socket) {
 			html: text
 		});
 	});
+
+function refuseControl() {
+	controlIO.to(this).emit('too many sockets');
+}
+
+controlIO.on('connection', function(socket) {
+	if (trios.length == 0 || (trios[trios.length - 1].complete && trios[trios.length - 1].control != undefined)) {
+		trios.push({screen: undefined, projector: undefined, control: socket.id, complete: false, id: (socket.id + "room")});
+		timeElapsed = 1;
+	} else if (trios[trios.length - 1].control != undefined) {
+		setTimeout(refuseControl.bind(socket.id), 20);
+		return;
+	} else {
+		var trio = trios[trios.length - 1];
+		trio.control = socket.id;
+	}
+
+	var id = trios[trios.length - 1].id;
+	socket.join(id);
+
+	socket.on('explain request', function() {
+		screensIO.to(this).emit('explain request');
+	}.bind(id));
+	socket.on('comment request', function(comments) {
+		screensIO.to(this).emit('comment request', comments);
+	}.bind(id));
 });
