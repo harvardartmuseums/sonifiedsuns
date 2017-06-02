@@ -74,7 +74,8 @@ var transp = nodemailer.createTransport({
 	port: 587,
 	secure: false,
 	auth: {
-
+		user: 'levyhaskell@g.harvard.edu',
+		pass: 'a47!E3bU7n'
 	}
 });
 
@@ -94,6 +95,7 @@ function testConnection() {
 		if (!trio.complete) {
 			screensIO.to(trio.screen).emit('timed out');
 			projectorIO.to(trio.projector).emit('timed out');
+			controlIO.to(trio.control).emit('timed out');
 			trios.pop();
 		}
 		timeElapsed = 0;
@@ -207,7 +209,7 @@ controlIO.on('connection', function(socket) {
 	socket.on('explain request', function() {
 		screensIO.to(this).emit('explain request');
 	}.bind(id));
-	socket.on('comment request', function(comments) {
-		screensIO.to(this).emit('comment request', comments);
+	socket.on('comment request', function() {
+		screensIO.to(this).emit('comment request');
 	}.bind(id));
 });
