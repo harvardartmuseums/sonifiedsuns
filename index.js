@@ -79,22 +79,21 @@ var transp = nodemailer.createTransport({
 var screensIO = io.of('/screens-namespace');
 var projectorIO = io.of('/projectors-namespace');
 var pairs = [];
-var unconnectedScreen = 0;
-var unconnectedProjector = 0;
+var timeElapsed = 0;
 
 setInterval(testConnection, 10000);
 
 function testConnection() {
-	if (unconnectedScreen == 6) {
-		screensIO.to(pairs.pop()).emit('timed out');
-		unconnectedScreen = 0;
-	} else if (unconnectedProjector == 6) {
-		projectorIO.to(pairs.pop()).emit('timed out');
-		unconnectedProjector = 0;
-	} else if (unconnectedScreen) {
-		unconnectedScreen++;
-	} else if (unconnectedProjector) {
-		unconnectedProjector++;
+	if (timeElapsed >= 6) {
+		var pair = pairs[pairs.length - 1];
+		if (!pair.complete) {
+			screensIO.to(pair.screen).emit('timed out');
+			projectorIO.to(pair.projector).emit('timed out');
+			pairs.pop();
+		}
+		timeElapsed = 0;
+	} else if (timeElapsed != 0) {
+		timeElapsed++;
 	}
 }
 
@@ -103,34 +102,36 @@ function refuseScreens() {
 }
 
 screensIO.on('connection', function(socket) {
-	if (unconnectedScreen) {
+	if (pairs.length == 0 || pairs[pairs.length - 1].complete) {
+		pairs.push({screen: socket.id, projector: undefined, complete: false, id: (socket.id + "room")});
+		timeElapsed = 1;
+	} else if (pairs[pairs.length - 1].screen != undefined) {
 		setTimeout(refuseScreens.bind(socket.id), 20);
-	} else { 
-		if (unconnectedProjector) {
-			unconnectedProjector = 0;
-		} else {
-			unconnectedScreen = 1;
-			pairs.push(socket.id + "room");
-		}
+		return;
+	} else {
 		var pair = pairs[pairs.length - 1];
-		socket.join(pair);
+		pair.screen = socket.id;
+		pair.complete = true;
+	}
 
-		socket.on('new image', function(url) {
-			projectorIO.to(this).emit('new image', url);
-		}.bind(pair));
-		socket.on('small image', function(url) {
-			projectorIO.to(this).emit('small image', url);
-		}.bind(pair));
-		socket.on('copyright', function() {
-			projectorIO.to(this).emit('copyright');
-		}.bind(pair));
-		socket.on('no image', function() {
-			projectorIO.to(this).emit('no image');
-		}.bind(pair));
-		socket.on('commenting', function() {
-			projectorIO.to(this).emit('commenting');
-		}.bind(pair));
-	} 
+	var id = pairs[pairs.length - 1].id;
+	socket.join(id);
+
+	socket.on('new image', function(url) {
+		projectorIO.to(this).emit('new image', url);
+	}.bind(id));
+	socket.on('small image', function(url) {
+		projectorIO.to(this).emit('small image', url);
+	}.bind(id));
+	socket.on('copyright', function() {
+		projectorIO.to(this).emit('copyright');
+	}.bind(id));
+	socket.on('no image', function() {
+		projectorIO.to(this).emit('no image');
+	}.bind(id));
+	socket.on('commenting', function() {
+		projectorIO.to(this).emit('commenting');
+	}.bind(id));
 });
 
 function refuseProjector() {
@@ -138,35 +139,37 @@ function refuseProjector() {
 }
 
 projectorIO.on('connection', function(socket) {
-	if (unconnectedProjector) {
+	if (pairs.length == 0 || pairs[pairs.length - 1].complete) {
+		pairs.push({screen: undefined, projector: socket.id, complete: false, id: (socket.id + "room")});
+		timeElapsed = 1;
+	} else if (pairs[pairs.length - 1].projector != undefined) {
 		setTimeout(refuseProjector.bind(socket.id), 20);
+		return;
 	} else {
-		if (unconnectedScreen) {
-			unconnectedScreen = 0;
-		} else {
-			unconnectedProjector = 1;
-			pairs.push(socket.id + "room");
-		}
 		var pair = pairs[pairs.length - 1];
-		socket.join(pair);
-
-		socket.on('explain request', function() {
-			screensIO.to(this).emit('explain request');
-		}.bind(pair));
-		socket.on('comment request', function(comments) {
-			screensIO.to(this).emit('comment request', comments);
-		}.bind(pair));
-		socket.on('comment end', function() {
-			screensIO.to(this).emit('comment end');
-		}.bind(pair));
-		socket.on('email', function(text) {
-			transp.sendMail({
-				from: 'levyhaskell@g.harvard.edu',
-				to: 'levyhaskell@g.harvard.edu',
-				subject: 'New Suns Explorer Comment',
-				text: text,
-				html: text
-			});
-		});
+		pair.projector = socket.id;
+		pair.complete = true;
 	}
+
+	var id = pairs[pairs.length - 1].id;
+	socket.join(id);
+
+	socket.on('explain request', function() {
+		screensIO.to(this).emit('explain request');
+	}.bind(id));
+	socket.on('comment request', function(comments) {
+		screensIO.to(this).emit('comment request', comments);
+	}.bind(id));
+	socket.on('comment end', function() {
+		screensIO.to(this).emit('comment end');
+	}.bind(id));
+	socket.on('email', function(text) {
+		transp.sendMail({
+			from: 'levyhaskell@g.harvard.edu',
+			to: 'levyhaskell@g.harvard.edu',
+			subject: 'New Suns Explorer Comment',
+			text: text,
+			html: text
+		});
+	});
 });
