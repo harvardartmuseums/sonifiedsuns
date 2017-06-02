@@ -54,7 +54,7 @@
 <div id="message"></div>
 <div id="controls">
 <span><span onclick="explain()" id="explain">Tap here or say "explain" to hear an explanation of the tones</span><br /><br /><br /><br /><br /><br />
-<span onclick="comments()" id="comments">Tap here or say "comments" to hear a selection of comments from your fellow visitors</span></span>
+<span onclick="readComments()" id="comments">Tap here or say "comments" to hear a selection of comments from your fellow visitors</span></span>
 </div>
 
 <script src="/socket.io/socket.io.js"></script>
@@ -114,7 +114,7 @@ function unclickComments() {
 	document.getElementById("comments").className = "";
 }
 
-function comments() {
+function readComments() {
 	socket.emit('comment request');
 	document.getElementById("comments").className = "click";
 	setTimeout(unclickComments, 1000);
@@ -152,7 +152,7 @@ function setup() {
 			};
 
 			if (currentSpeech.indexOf("comment") != -1) {
-				comments();
+				readComments();
 			};
 		}
 
