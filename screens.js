@@ -12,8 +12,7 @@
 //
 //    Note: I've made some eccentric choices--
 //    nulling variables, reusing objects in 
-//    peculiar ways, and notably, reloading the
-//    page once a day--to account for some of
+//    peculiar ways, etc.--to account for some of
 //    the scope/memory leak problems Javascript 
 //    has, given that this is a memory-intensive
 //    program intended to run over an extended
@@ -67,29 +66,7 @@ var speechT = new SpeechSynthesisUtterance();
 speechT.volume = speechVolume;
 speechT.lang = 'en-US';
 
-var voiceEnglish = new SpeechSynthesisUtterance();
-voiceEnglish.volume = speechVolume;
-var voiceBritishEnglish = null;
-var voiceFrench = null;
-var voiceGerman = null;
-var voiceSpanish = null;
-var voiceIndonesian = null;
-var voiceItalian = null;
-var voiceJapanese = null;
-var voiceKorean = null;
-var voiceDutch = null;
-var voicePolish = null;
-var voicePortuguese = null;
-var voiceRussian = null;
-var voiceChinese = null;
-var voiceThai = null;
-var voiceTurkish = null;
-var voiceSwedish = null;
-var voiceNorwegian = null;
-var voiceDanish = null;
-var voiceHungarian = null;
-var voiceVietnamese = null;
-var voiceFinnish = null;
+var voiceDictionary = {};
 
 var speechD = new SpeechSynthesisUtterance();
 speechD.volume = speechVolume;
@@ -278,9 +255,14 @@ function setup(){
 
 function chooseVoice() {
 	var voices = synthesis.getVoices();
+	var voice;
 	for (var i = 0; i < voices.length; i++) {
+		voice = new SpeechSynthesisUtterance();
+		voice.volume = speechVolume;
+		voice.voice = voice[i];
+		voiceDictionary[voices[i].lang] = voice;
+
 		if (voices[i].name == "Google US English") {
-			voiceEnglish.voice = voices[i];
 			speechT.voice = voices[i];
 			speechD.voice = voices[i];
 			for (var j = 0; j < explanationSpeech.length; j++) {
@@ -291,126 +273,7 @@ function chooseVoice() {
 			}
 			s.voice = voices[i];
 			c.voice = voices[i];
-
-		// British English
-		} else if (voices[i].name == "Google UK English Female") {
-			voiceBritishEnglish = new SpeechSynthesisUtterance();
-			voiceBritishEnglish.volume = speechVolume;
-			voiceBritishEnglish.voice = voices[i];
-		// German
-		} else if (voices[i].lang == "de-DE") {
-			voiceGerman = new SpeechSynthesisUtterance();
-			voiceGerman.volume = speechVolume;
-			voiceGerman.voice = voices[i];
-		
-		// Spanish
-		} else if (voices[i].lang == "es-ES") {
-			voiceSpanish = new SpeechSynthesisUtterance();
-			voiceSpanish.volume = speechVolume;
-			voiceSpanish.voice = voices[i];
-		
-		// French
-		} else if (voices[i].lang == "fr-FR") {
-			voiceFrench = new SpeechSynthesisUtterance();
-			voiceFrench.volume = speechVolume;
-			voiceFrench.voice = voices[i];
-		
-		// Italian
-		} else if (voices[i].lang == "it-IT") {
-			voiceItalian = new SpeechSynthesisUtterance();
-			voiceItalian.volume = speechVolume;
-			voiceItalian.voice = voices[i];
-		
-		// Japanese
-		} else if (voices[i].lang == "ja-JP") {
-			voiceJapanese = new SpeechSynthesisUtterance();
-			voiceJapanese.volume = speechVolume;
-			voiceJapanese.voice = voices[i];
-		
-		// Korean
-		} else if (voices[i].lang == "ko-KR") {
-			voiceKorean = new SpeechSynthesisUtterance();
-			voiceKorean.volume = speechVolume;
-			voiceKorean.voice = voices[i];
-		
-		// Dutch
-		} else if (voices[i].lang == "nl-NL") {
-			voiceDutch = new SpeechSynthesisUtterance();
-			voiceDutch.volume = speechVolume;
-			voiceDutch.voice = voices[i];
-		
-		// Polish
-		} else if (voices[i].lang == "pl-PL") {
-			voicePolish = new SpeechSynthesisUtterance();
-			voicePolish.volume = speechVolume;
-			voicePolish.voice = voices[i];
-		
-		// Portuguese
-		} else if (voices[i].lang == "pt-BR") {
-			voicePortuguese = new SpeechSynthesisUtterance();
-			voicePortuguese.volume = speechVolume;
-			voicePortuguese.voice = voices[i];
-		
-		// Russian
-		} else if (voices[i].lang == "ru-RU") {
-			voiceRussian = new SpeechSynthesisUtterance();
-			voiceRussian.volume = speechVolume;
-			voiceRussian.voice = voices[i];
-		
-		// Chinese
-		} else if (voices[i].lang == "zh-CN") {
-			voiceChinese = new SpeechSynthesisUtterance();
-			voiceChinese.volume = speechVolume;
-			voiceChinese.voice = voices[i];
-		
-		// Thai
-		} else if (voices[i].lang == "th-TH") {
-			voiceThai = new SpeechSynthesisUtterance();
-			voiceThai.volume = speechVolume;
-			voiceThai.voice = voices[i];
-		
-		// Turkish
-		} else if (voices[i].lang == "tr-TR") {
-			voiceTurkish = new SpeechSynthesisUtterance();
-			voiceTurkish.volume = speechVolume;
-			voiceTurkish.voice = voices[i];
-		
-		// Vietnamese
-		} else if (voices[i].lang == "vi-VN") {
-			voiceTurkish = new SpeechSynthesisUtterance();
-			voiceTurkish.volume = speechVolume;
-			voiceTurkish.voice = voices[i];
-		
-		// Finnish
-		} else if (voices[i].lang == "fi-FI") {
-			voiceFinnish = new SpeechSynthesisUtterance();
-			voiceFinnish.volume = speechVolume;
-			voiceFinnish.voice = voices[i];
-		
-		// Danish
-		} else if (voices[i].lang == "da-DK") {
-			voiceDanish = new SpeechSynthesisUtterance();
-			voiceDanish.volume = speechVolume;
-			voiceDanish.voice = voices[i];
-		
-		// Hungarian
-		} else if (voices[i].lang == "hu-HU") {
-			voiceHungarian = new SpeechSynthesisUtterance();
-			voiceHungarian.volume = speechVolume;
-			voiceHungarian.voice = voices[i];
-		
-		// Norwegian
-		} else if (voices[i].lang == "nb-NO") {
-			voiceNorwegian = new SpeechSynthesisUtterance();
-			voiceNorwegian.volume = speechVolume;
-			voiceNorwegian.voice = voices[i];
-		
-		// Swedish
-		} else if (voices[i].lang == "sv-SE") {
-			voiceSwedish = new SpeechSynthesisUtterance();
-			voiceSwedish.volume = speechVolume;
-			voiceSwedish.voice = voices[i];
-		}
+		} 
 	}
 }
 
@@ -544,21 +407,21 @@ socket.on('comment end', function() {
 	setTimeout(doWork, transitionTimer * 1000);
 });
 
-socket.on('too many sockets', function() {
-	document.body.innerHTML = '';
-	alert("Another instance of this page is attempting to connect; please wait a few minutes and try again.");
+socket.on('id', function(id) {
+	document.getElementById("prompt").innerHTML = "ID: " + id + "<br /><span onclick=\"start()\">Click to start</span>";
 });
 
-socket.on('timed out', function() {
-	document.body.innerHTML = '';
-	alert("This attempt to connect timed out; please try again. Be sure to open an instance of http://sonifiedsuns.herokuapps.com/projectors.html within a minute of reloading this page.");
-});
-
+function start() {
+	document.getElementById("prompt").innerHTML = "";
+	window.setInterval(restart, restartTimer * 1000);
+}
 
 function readComments() {
 	for (var i = 0; i < 5; i++) {
-		commentReaders[i].text = comments[i];
-		synthesis.speak(commentReaders[i]);
+		if (comments[i]) {
+			commentReaders[i].text = comments[i];
+			synthesis.speak(commentReaders[i]);
+		}
 	}
 }
 
@@ -913,16 +776,16 @@ function setLabel(item) {
 		}
 
 		if (text.includes("Anonymous") || text.includes("Unidentified")) {
-			voiceEnglish.text = text;
-			synthesis.speak(voiceEnglish);
+			voiceDictionary["en-US"].text = text;
+			synthesis.speak(voiceDictionary["en-US"]);
 		} else {
 			handleLanguage(item.culture, text);
 		}
 		text = null;
 	} else if (item.culture != null) {
 		document.getElementById("artist").innerHTML = item.culture;
-		voiceEnglish.text = item.culture;
-		synthesis.speak(voiceEnglish);
+		voiceDictionary["en-US"].text = item.culture;
+		synthesis.speak(voiceDictionary["en-US"]);
 	}
 	artists = null;
 
@@ -994,24 +857,24 @@ function speakLanguage(voice, text) {
 }
 
 function handleLanguage(culture, text) {
+	var lang;
 	switch(culture) {
 		case "American":
 		case "Canadian":
-			voiceEnglish.text = text;
-			synthesis.speak(voiceEnglish);
+			lang = "en-US";
 			break;
 		case "British":
 		case "English":
 		case "Irish":
 		case "Scottish":
-			speakLanguage(voiceBritishEnglish, text);
+			lang = "en-UK";
 			break;
 		case "German":
 		case "Austrian":
-			speakLanguage(voiceGerman, text);
+			lang = "de-DE";
 			break;
 		case "French":
-			speakLanguage(voiceFrench, text);
+			lang = "fr-FR";
 			break;
 		case "Italian":
 		case "Venetian":
@@ -1020,24 +883,21 @@ function handleLanguage(culture, text) {
 		case "Nepalese":
 		case "Bolognese":
 		case "Neapolitan":
-			speakLanguage(voiceItalian, text);
-			break;
-		case "Greek":
-		case "Roman":
+			lang = "it-IT";
 			break;
 		case "Japanese":
-			speakLanguage(voiceJapanese, text);
+			lang = "ja-JP";
 			break;
 		case "Chinese":
-			speakLanguage(voiceChinese, text);
+			lang = "zh-CN";
 			break;
 		case "Dutch":
 		case "Flemish":
 		case "Netherlandish":
-			speakLanguage(voiceDutch, text);
+			lang = "nl-NL";
 			break;
 		case "Korean":
-			speakLanguage(voiceKorean, text);
+			lang = "ko-KR";
 			break;
 		case "Spanish":
 		case "Mexican":
@@ -1049,48 +909,49 @@ function handleLanguage(culture, text) {
 		case "Venezuelan":
 		case "Uruguayan":
 		case "Guatemalan":
-			speakLanguage(voiceSpanish, text);
+			lang = "es-ES";
 			break;
 		case "Russian":
-			speakLanguage(voiceRussian, text);
+			lang = "ru-RU";
 			break;
 		case "Thai":
-			speakLanguage(voiceThai, text);
+			lang = "th-TH";
 			break;
 		case "Swedish":
-			speakLanguage(voiceSwedish, text);
+			lang = "sv-SE";
 			break;
 		case "Turkish":
-			speakLanguage(voiceTurkish, text);
+			lang = "tr-TR";
 			break;
 		case "Norwegian":
-			speakLanguage(voiceNorwegian, text);
+			lang = "nb-NO";
 			break;
 		case "Portuguese":
 		case "Brazilian":
-			speakLanguage(voicePortuguese, text);
+			lang = "pt-BR";
 			break;
 		case "Danish":
-			speakLanguage(voiceDanish, text);
+			lang = "da-DK";
 			break;
 		case "Polish":
-			speakLanguage(voicePolish, text);
+			lang = "pl-PL";
 			break;
 		case "Hungarian":
-			speakLanguage(voiceHungarian, text);
-			break;
-		case "Indonesian":
-			speakLanguage(voiceIndonesian, text);
+			lang = "hu-HU";
 			break;
 		case "Vietnamese":
-			speakLanguage(voiceVietnamese, text);
+			lang = "vi-VN";
 			break;
 		case "Finnish":
-			speakLanguage(voiceFinnish, text);
+			lang = "fi-FI";
 			break;
+		case "Greek":
+		case "Roman":
 		default:
-			voiceEnglish.text = text;
-			synthesis.speak(voiceEnglish);
+			lang = "en-US";
 			break;
 	}
+	(voiceDictionary[lang] || voiceDictionary["en-US"]).text = text;
+	synthesis.speak(voiceDictionary[lang] || voiceDictionary["en-US"]);
+	lang = null;
 }
