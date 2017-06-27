@@ -8,4 +8,4 @@ This project, based on Jeff Steward's Suns Explorer, represents randomly chosen 
 
 ### To offer visual controls and messages, open http://sonifiedsuns.herokuapp.com/control.html on a mobile device and enter the id from http://sonifiedsuns.herokuapp.com/screens.html when prompted. Displays best if opened from the home screen of an iPad.
 
-#### Note: This project will likely need to be restarted (preferably, quitting and reopening Chrome) once a day due to unavoidable Javascript memory leaks.
+#### Note: This project will likely need to be restarted (preferably, including quitting and reopening Chrome) once a day due to unavoidable Javascript memory leaks.
