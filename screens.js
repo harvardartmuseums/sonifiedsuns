@@ -408,13 +408,8 @@ socket.on('comment end', function() {
 });
 
 socket.on('id', function(id) {
-	document.getElementById("prompt").innerHTML = "ID: " + id + "<br /><span onclick=\"start()\">Click to start</span>";
+	alert("ID: " + id);
 });
-
-function start() {
-	document.getElementById("prompt").innerHTML = "";
-	window.setInterval(restart, restartTimer * 1000);
-}
 
 function readComments() {
 	for (var i = 0; i < 5; i++) {

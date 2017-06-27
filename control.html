@@ -62,14 +62,13 @@
 <script>
 var socket = io('/control-namespace');
 
-socket.on('too many sockets', function() {
-	document.body.innerHTML = '';
-	alert("Another instance of this page is attempting to connect; please wait a few minutes and try again.");
+socket.on("invalid id", function() {
+	socket.emit("id", prompt("Invalid ID. What screen are you connecting to?"));
 });
+socket.emit("id", prompt("What screen are you connecting to?"));
 
-socket.on('timed out', function() {
-	document.body.innerHTML = '';
-	alert("This attempt to connect timed out; please try again. Be sure to open an instance of http://sonifiedsuns.herokuapps.com/screens.html and an instance of http://sonifiedsuns.herokuapps.com/projectors.html within a minute of reloading this page.");
+socket.on('screen closed', function() {
+	alert("The screen this control was connected to has been closed or disconnected.");
 });
 
 socket.on('message', function(text) {

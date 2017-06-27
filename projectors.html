@@ -194,20 +194,20 @@ var displayComments = [];
 var comment = "";
 
 socket.on('commenting', function() {
+	recognition.abort();
+	recognition.start();
 	commentEnder = setTimeout(commentOff, 10000);
 	commentFinalEnder = setTimeout(commentTooLong, 90000);
 	commenting = true;
 	comment = "";
 });
 
-socket.on('too many sockets', function() {
-	document.body.innerHTML = '';
-	alert("Another instance of this page is attempting to connect; please wait a few minutes and try again.");
+socket.on('screen closed', function() {
+	alert("The screen this image viewer was connected to has been closed or disconnected. The images displayed will no longer update.");
 });
 
-socket.on('timed out', function() {
-	document.body.innerHTML = '';
-	alert("This attempt to connect timed out; please try again. Be sure to open an instance of http://sonifiedsuns.herokuapps.com/screens.html within a minute of reloading this page.");
+socket.on("invalid id", function() {
+	socket.emit("id", prompt("Invalid ID. What screen are you connecting to?"));
 });
 
 function resampleComments(list) {
@@ -301,6 +301,8 @@ setup();
 
 function setup(){
 	resize();
+
+	socket.emit("id", prompt("What screen are you connecting to?"));
 
 	// set up speech recognition
 	//recognition.continuous = true;
