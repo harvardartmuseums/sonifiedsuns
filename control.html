@@ -70,7 +70,7 @@ function reload() {
 }
 
 socket.on('reload', function() {
-	setTimeout(reload, 60000);
+	setTimeout(reload, 20000);
 });
 
 socket.on("invalid id", function() {
