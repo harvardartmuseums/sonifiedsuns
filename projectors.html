@@ -180,7 +180,7 @@
 <script src="/socket.io/socket.io.js"></script>
 
 <script type="text/javascript">
-var reload = false;
+var reloadPage = false;
 
 var socket = io('/projectors-namespace'); // to listen for image change
 window.onbeforeunload = function() {
@@ -188,7 +188,7 @@ window.onbeforeunload = function() {
 };
 
 function reload() {
-	if (reload) {
+	if (reloadPage) {
 		location.reload(true);
 	}
 }
@@ -319,7 +319,7 @@ function setup(){
 	var id = /\?id=([0-9]{4})/i.exec(window.location.search);
 	if (id) {
 		socket.emit("id", id[1]);
-		reload = true;
+		reloadPage = true;
 	} else {
 		socket.emit("id", prompt("What screen are you connecting to?"));
 	}
