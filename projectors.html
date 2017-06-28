@@ -182,6 +182,17 @@
 <script type="text/javascript">
 
 var socket = io('/projectors-namespace'); // to listen for image change
+window.onbeforeunload = function() {
+	socket.disconnect(true);
+};
+
+function reload() {
+	location.reload(true);
+}
+
+socket.on('reload', function() {
+	setTimeout(reload, 60000);
+});
 
 var shade = 4;
 var recognition = new webkitSpeechRecognition();
@@ -199,10 +210,6 @@ socket.on('commenting', function() {
 	commentFinalEnder = setTimeout(commentTooLong, 90000);
 	commenting = true;
 	comment = "";
-});
-
-socket.on('screen closed', function() {
-	alert("The screen this image viewer was connected to has been closed or disconnected. The images displayed will no longer update.");
 });
 
 socket.on("invalid id", function() {

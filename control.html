@@ -61,6 +61,17 @@
 <script src="/socket.io/socket.io.js"></script>
 <script>
 var socket = io('/control-namespace');
+window.onbeforeunload = function() {
+	socket.disconnect(true);
+};
+
+function reload() {
+	location.reload(true);
+}
+
+socket.on('reload', function() {
+	setTimeout(reload, 60000);
+});
 
 socket.on("invalid id", function() {
 	socket.emit("id", prompt("Invalid ID. What screen are you connecting to?"));
@@ -72,10 +83,6 @@ if (id) {
 } else {
 	socket.emit("id", prompt("What screen are you connecting to?"));
 }
-
-socket.on('screen closed', function() {
-	alert("The screen this control was connected to has been closed or disconnected.");
-});
 
 socket.on('message', function(text) {
 	document.getElementById("message").innerHTML = "<span>" + text + "</span>";

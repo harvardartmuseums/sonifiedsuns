@@ -107,8 +107,11 @@ screensIO.on('connection', function(socket) {
 
 		socket.on('disconnect', function() {
 			screens.splice(screens.indexOf(this), 1);
-			projectorIO.to(this).emit('screen closed');
-			controlIO.to(this).emit('screen closed');
+		}.bind(id));
+
+		socket.on('reloading', function() {
+			projectorIO.to(this).emit('reload');
+			controlIO.to(this).emit('reload');
 		}.bind(id));
 
 		socket.on('new image', function(url) {

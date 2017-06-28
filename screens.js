@@ -43,6 +43,8 @@ var sonificationLength = 15;
 var speechVolume = .3;
 var startTime = 9;
 var endTime = 17;
+var reloadTime = 8;
+var reload = false;
 var explanationFrequence = 9;
 var dimensionCap = 500;
 
@@ -250,6 +252,7 @@ function setup(){
 	var id = /\?id=([0-9]{4})/i.exec(window.location.search);
 	if (id) {
 		socket.emit("id", id[1]);
+		reload = true;
 	} else {
 		socket.emit("id");
 	}
@@ -383,9 +386,11 @@ function doWork() {
 			}
 
 		// upon request, read selection of comments
-		} else if (commentRequest == true) {
-			commentRequest = false;
-			readComments();
+		} else if (commentRequest == true && counter != 0 && reload) {
+			socket.emit('reloading');
+			location.reload(true);
+			//commentRequest = false;
+			//readComments();
 
 		// mention explanation
 		} else if (counter%explanationFrequence == 0) {
@@ -400,6 +405,9 @@ function doWork() {
 			getData();
 			counter++;
 		} 
+	} else if (date.getHours() == reloadTime && counter != 0 && reload) {
+		socket.emit('reloading');
+		location.reload(true);
 	}
 }
 
