@@ -86,8 +86,17 @@ var projectorIO = io.of('/projectors-namespace');
 var controlIO = io.of('/control-namespace');
 var screens = [];
 
+function getId() {
+	var id = Math.floor(9000*Math.random()) + 1000;
+	if (screens.indexOf(id) != -1) {
+		return getId();
+	} else {
+		return id;
+	}
+}
+
 screensIO.on('connection', function(socket) {
-	var id = socket.id;
+	var id = getId();
 
 	screens.push(id);
 	socket.join(id);
