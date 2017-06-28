@@ -91,7 +91,7 @@ function getId() {
 	if (screens.indexOf(id) != -1) {
 		return getId();
 	} else {
-		return id;
+		return id + "";
 	}
 }
 
