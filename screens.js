@@ -427,6 +427,10 @@ socket.on('id', function(id) {
 	alert("ID: " + id);
 });
 
+socket.on('id collision', function(id) {
+	alert("ID already in use. " + id + " used instead.");
+});
+
 function readComments() {
 	if (comments) {
 		for (var i = 0; i < 5; i++) {

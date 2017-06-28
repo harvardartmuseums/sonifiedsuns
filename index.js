@@ -100,6 +100,9 @@ screensIO.on('connection', function(socket) {
 		if (!id) {
 			id = getId();
 			socket.emit('id', id);
+		} else if (screens.indexOf(id) != -1) {
+			id = getId();
+			socket.emit('id collision', id);
 		}
 
 		screens.push(id);
