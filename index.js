@@ -177,7 +177,7 @@ controlIO.on('connection', function(socket) {
 				screensIO.to(this).emit('explain request');
 			}.bind(id));
 			socket.on('comment request', function() {
-				screensIO.to(this).emit('comment request');
+				projectorIO.to(this).emit('comment request');
 			}.bind(id));
 		} else {
 			socket.emit('invalid id');

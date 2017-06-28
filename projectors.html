@@ -296,6 +296,11 @@ socket.on('copyright', function() {
 		resampleComments(comments.slice());
 });
 
+socket.on('comment request', function() {
+	resampleComments(comments.slice());
+	socket.emit('comment request', displayComments);
+});
+
 setup();
 
 function setup(){
