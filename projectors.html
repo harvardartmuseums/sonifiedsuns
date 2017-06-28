@@ -301,7 +301,12 @@ setup();
 function setup(){
 	resize();
 
-	socket.emit("id", prompt("What screen are you connecting to?"));
+	var id = /\?id=([0-9]{4})/i.exec(window.location.search);
+	if (id) {
+		socket.emit("id", id[1]);
+	} else {
+		socket.emit("id", prompt("What screen are you connecting to?"));
+	}
 
 	// set up speech recognition
 	//recognition.continuous = true;
@@ -332,6 +337,7 @@ function setup(){
 			};
 
 			if (currentSpeech.indexOf("comment") != -1) {
+				resampleComments(comments.slice());
 				socket.emit('comment request', displayComments);
 			};
 		}

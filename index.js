@@ -96,41 +96,44 @@ function getId() {
 }
 
 screensIO.on('connection', function(socket) {
-	var id = getId();
+	socket.on('id', function(id) {
+		if (!id) {
+			id = getId();
+			socket.emit('id', id);
+		}
 
-	screens.push(id);
-	socket.join(id);
+		screens.push(id);
+		socket.join(id);
 
-	socket.emit('id', id);
+		socket.on('disconnect', function() {
+			screens.splice(screens.indexOf(this), 1);
+			projectorIO.to(this).emit('screen closed');
+			controlIO.to(this).emit('screen closed');
+		}.bind(id));
 
-	socket.on('disconnect', function() {
-		screens.splice(screens.indexOf(this), 1);
-		projectorIO.to(this).emit('screen closed');
-		controlIO.to(this).emit('screen closed');
-	}.bind(id));
-
-	socket.on('new image', function(url) {
-		projectorIO.to(this).emit('new image', url);
-	}.bind(id));
-	socket.on('small image', function(url) {
-		projectorIO.to(this).emit('small image', url);
-	}.bind(id));
-	socket.on('copyright', function() {
-		projectorIO.to(this).emit('copyright');
-	}.bind(id));
-	socket.on('no image', function() {
-		projectorIO.to(this).emit('no image');
-	}.bind(id));
-	socket.on('commenting', function() {
-		projectorIO.to(this).emit('commenting');
-		controlIO.to(this).emit('message', 'Record a comment by speaking into the microphone now.');
-	}.bind(id));
-	socket.on('message', function(text) {
-		controlIO.to(this).emit('message', text);
-	}.bind(id));
-	socket.on('close message', function() {
-		controlIO.to(this).emit('close message');
-	}.bind(id));
+		socket.on('new image', function(url) {
+			projectorIO.to(this).emit('new image', url);
+		}.bind(id));
+		socket.on('small image', function(url) {
+			projectorIO.to(this).emit('small image', url);
+		}.bind(id));
+		socket.on('copyright', function() {
+			projectorIO.to(this).emit('copyright');
+		}.bind(id));
+		socket.on('no image', function() {
+			projectorIO.to(this).emit('no image');
+		}.bind(id));
+		socket.on('commenting', function() {
+			projectorIO.to(this).emit('commenting');
+			controlIO.to(this).emit('message', 'Record a comment by speaking into the microphone now.');
+		}.bind(id));
+		socket.on('message', function(text) {
+			controlIO.to(this).emit('message', text);
+		}.bind(id));
+		socket.on('close message', function() {
+			controlIO.to(this).emit('close message');
+		}.bind(id));
+	});
 });
 
 projectorIO.on('connection', function(socket) {

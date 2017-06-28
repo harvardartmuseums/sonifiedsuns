@@ -247,6 +247,17 @@ function mod(x, y) {
 setup();
 
 function setup(){
+	var id = /\?id=([0-9]{4})/i.exec(window.location.search);
+	if (id) {
+		socket.emit("id", id[1]);
+	} else {
+		socket.emit("id");
+	}
+
+	window.onbeforeunload = function() {
+		socket.disconnect(true);
+	};
+
 	loadIRs();
 	sizeLabel();
 
@@ -417,6 +428,8 @@ function readComments() {
 			commentReaders[i].text = comments[i];
 			synthesis.speak(commentReaders[i]);
 		}
+	} else {
+		doWork();
 	}
 }
 

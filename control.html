@@ -65,7 +65,13 @@ var socket = io('/control-namespace');
 socket.on("invalid id", function() {
 	socket.emit("id", prompt("Invalid ID. What screen are you connecting to?"));
 });
-socket.emit("id", prompt("What screen are you connecting to?"));
+
+var id = /\?id=([0-9]{4})/i.exec(window.location.search);
+if (id) {
+	socket.emit("id", id[1]);
+} else {
+	socket.emit("id", prompt("What screen are you connecting to?"));
+}
 
 socket.on('screen closed', function() {
 	alert("The screen this control was connected to has been closed or disconnected.");
