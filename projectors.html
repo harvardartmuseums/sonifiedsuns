@@ -195,7 +195,6 @@ var comment = "";
 
 socket.on('commenting', function() {
 	recognition.abort();
-	recognition.start();
 	commentEnder = setTimeout(commentOff, 10000);
 	commentFinalEnder = setTimeout(commentTooLong, 90000);
 	commenting = true;
@@ -366,7 +365,7 @@ function commentOff() {
 	commentFinalEnder = undefined;
 	commentEnder = undefined;
 	commenting = false;
-	if (comment != "") {
+	if (comment) {
 		if ((comments[0] == "") || (comments[0] == "No comments recorded yet")) {
 			comments.shift();
 		}
@@ -381,7 +380,7 @@ function commentTooLong() {
 	commentFinalEnder = undefined;
 	commentEnder = undefined;
 	commenting = false;
-	if (comment != "") {
+	if (comment) {
 		if ((comments[0] == "") || (comments[0] == "No comments recorded yet")) {
 			comments.shift();
 		}

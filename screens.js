@@ -412,8 +412,8 @@ socket.on('id', function(id) {
 });
 
 function readComments() {
-	for (var i = 0; i < 5; i++) {
-		if (comments[i]) {
+	if (comments) {
+		for (var i = 0; i < 5; i++) {
 			commentReaders[i].text = comments[i];
 			synthesis.speak(commentReaders[i]);
 		}
