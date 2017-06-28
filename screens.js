@@ -386,11 +386,9 @@ function doWork() {
 			}
 
 		// upon request, read selection of comments
-		} else if (commentRequest == true && counter != 0 && reload) {
-			socket.emit('reloading');
-			location.reload(true);
-			//commentRequest = false;
-			//readComments();
+		} else if (commentRequest == true) {
+			commentRequest = false;
+			readComments();
 
 		// mention explanation
 		} else if (counter%explanationFrequence == 0) {
