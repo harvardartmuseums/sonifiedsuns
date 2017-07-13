@@ -4,11 +4,11 @@
   "description": "A data sonification, with visuals, of the Harvard Art Museums' collections",
   "main": "index.js",
   "engines": {
-    "node": "7.2.0"
+    "node": "7.10.1"
   },
   "dependencies": {
     "express": "4.14.0",
-    "nodemailer": "^4.0.1",
+    "nodemailer": "4.0.1",
     "socket.io": "1.5.1"
   },
   "devDependencies": {},
