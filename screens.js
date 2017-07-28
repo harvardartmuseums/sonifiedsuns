@@ -272,21 +272,27 @@ function chooseVoice() {
 	var voice;
 	for (var i = 0; i < voices.length; i++) {
 		voice = new SpeechSynthesisUtterance();
-		voice.volume = speechVolume;
 		voice.voice = voice[i];
+		voice.volume = speechVolume;
 		voiceDictionary[voices[i].lang] = voice;
 
 		if (voices[i].name == "Google US English") {
 			speechT.voice = voices[i];
+			speechT.volume = speechVolume;
 			speechD.voice = voices[i];
+			speechD.volume = speechVolume;
 			for (var j = 0; j < explanationSpeech.length; j++) {
 				explanationSpeech[j].voice = voices[i];
+				explanationSpeech[j].volume = speechVolume;
 			}
 			for (var j = 0; j < commentReaders.length; j++) {
 				commentReaders[j].voice = voices[i];
+				commentReaders[j].volume = speechVolume;
 			}
 			s.voice = voices[i];
+			s.volume = speechVolume;
 			c.voice = voices[i];
+			c.volume = speechVolume;
 		} 
 	}
 }
