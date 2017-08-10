@@ -27,7 +27,3 @@ npm install
 ```
 npm start
 ```
-
-
-
-#### Note: further iPad/iPhone controls and projector displays can be opened using the same id.
